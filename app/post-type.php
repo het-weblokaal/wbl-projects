@@ -47,6 +47,10 @@ function register_post_type() {
 				'permastruct' => '/' . get_post_type_single_item_slug() . '/%' . get_post_type() . '%'
 			],
 			'show_in_rest' => true,
+			'admin_cols' => apply_filters( 'wbl-projects_admin_cols', [
+				'title',
+				'date'
+			] ),
 		],
 		[
 			# Override the base names used for labels:
