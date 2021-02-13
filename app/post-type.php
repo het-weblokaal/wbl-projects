@@ -13,14 +13,14 @@ function get_post_type() {
  * Get default post type handle
  */
 function get_post_type_handle() {
-	return 'projects';
+	return apply_filters( 'wbl-projects_post_type_handle', 'projects' );
 }
 
 /**
  * Get post type name
  */
 function get_post_type_name() {
-	return __('Projects', 'wbl-projects');
+	return apply_filters( 'wbl-projects_post_type_name', __('Projects', 'wbl-projects') );
 }
 
 /**
@@ -38,7 +38,7 @@ function register_post_type() {
 				'name' => get_post_type_name(),
 				'menu_name' => get_post_type_name()
 			],
-			'menu_icon'     => 'dashicons-calendar-alt',
+			'menu_icon'     => 'dashicons-portfolio',
 			'menu_position' => 25,
 
 			// Engine
@@ -84,7 +84,10 @@ function get_post_type_archive_slug() {
 		}
 	}
 
-	return trim($archive_slug, '/');
+	// We don't want no slashes at the outsides
+	$archive_slug = trim($archive_slug, '/');
+
+	return apply_filters( 'wbl-projects_post_type_archive_slug', $archive_slug );
 }
 
 /**
@@ -95,5 +98,7 @@ function get_post_type_single_item_slug() {
 	$item_slug = get_setting( 'post_type_single_item_slug' ) ?? get_post_type();
 
 	// We don't want no slashes at the outsides
-	return trim($item_slug, '/');
+	$item_slug = trim($item_slug, '/');
+
+	return apply_filters( 'wbl-projects_post_type_single_item_slug', $item_slug );
 }

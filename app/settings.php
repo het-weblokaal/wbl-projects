@@ -20,8 +20,14 @@ function get_settings() {
 function get_setting( $setting_name ) {
 
 	$settings = get_settings();
+	$setting = null;
 
-	return $settings[$setting_name] ?? null;
+	// Do not set empty settings
+	if ( !empty($settings[$setting_name]) ) {
+		$setting = $settings[$setting_name];
+	}
+
+	return $setting;
 }
 
 function get_settings_nonce_value() {
