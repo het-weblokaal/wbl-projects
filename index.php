@@ -12,7 +12,7 @@
  * License:      GPLv3
  *
  * GitHub Plugin URI:  https://github.com/het-weblokaal/wbl-projects
- * GitHub Branch:      master
+ * GitHub Branch:      main
  */
 
 namespace WBL_Projects;
