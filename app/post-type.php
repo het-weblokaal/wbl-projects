@@ -50,8 +50,8 @@ function register_post_type() {
 		],
 		[
 			# Override the base names used for labels:
-			'singular' => __('Event', 'wbl-projects'),
-			'plural'   => __('Events', 'wbl-projects'),
+			'singular' => __('Project', 'wbl-projects'),
+			'plural'   => __('Projects', 'wbl-projects'),
 			'slug'     => 'project'
 		]
 	);
