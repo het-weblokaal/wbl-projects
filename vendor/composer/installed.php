@@ -1,24 +1,24 @@
 <?php return array (
   'root' => 
   array (
-    'pretty_version' => 'dev-master',
-    'version' => 'dev-master',
+    'pretty_version' => 'dev-main',
+    'version' => 'dev-main',
     'aliases' => 
     array (
     ),
-    'reference' => 'f547f34ba71d2ee4371f66bdb16907fe8cff7bf4',
+    'reference' => 'c53625a1233c1486b22b6569a4ce1adb61326828',
     'name' => '__root__',
   ),
   'versions' => 
   array (
     '__root__' => 
     array (
-      'pretty_version' => 'dev-master',
-      'version' => 'dev-master',
+      'pretty_version' => 'dev-main',
+      'version' => 'dev-main',
       'aliases' => 
       array (
       ),
-      'reference' => 'f547f34ba71d2ee4371f66bdb16907fe8cff7bf4',
+      'reference' => 'c53625a1233c1486b22b6569a4ce1adb61326828',
     ),
     'johnbillion/extended-cpts' => 
     array (
