@@ -53,4 +53,5 @@ array_map( function( $file ) {
 	'setup',
 	'post-type',
 	'settings',
+	'seo',
 ] );
