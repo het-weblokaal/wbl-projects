@@ -29,7 +29,7 @@ add_action( 'plugins_loaded', function() {
 function manage_page_meta_title( $meta_title ) {
 
 	# Post archive page
-	if ( is_post_type_archive() ) {
+	if ( is_post_type_archive( get_post_type() ) ) {
 
 		# Set the meta title of the selected archive page
 		if ( $post_id = get_post_type_archive_page() ) {
@@ -47,7 +47,7 @@ function manage_page_meta_title( $meta_title ) {
  */
 function manage_page_meta_description( $meta_description ) {
 
-	if ( is_post_type_archive() ) {
+	if ( is_post_type_archive( get_post_type() ) ) {
 
 		# Set the meta description of the selected archive page
 		if ( $post_id = get_post_type_archive_page() ) {
