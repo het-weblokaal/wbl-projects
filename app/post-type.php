@@ -91,6 +91,8 @@ function get_post_type_archive_slug() {
 			$archive_page_slug = get_page_uri($archive_page);
 
 			$archive_slug = $archive_page_slug ? $archive_page_slug : $archive_slug;
+
+			App::log('slug of the set archive page: ' . $archive_slug);
 		}
 	}
 
@@ -98,7 +100,7 @@ function get_post_type_archive_slug() {
 	$archive_slug = trim($archive_slug, '/');
 
 	# Allow theme to override the selected archive slug
-	return apply_filters( 'wbl-projects_post_type_archive_slug', $archive_slug );
+	return apply_filters( 'wbl_projects_post_type_archive_slug', $archive_slug );
 }
 
 /**
