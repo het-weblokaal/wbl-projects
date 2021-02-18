@@ -31,7 +31,6 @@ function register_post_type() {
 			'menu_position' => 25,
 
 			# Engine
-			'has_archive'   => get_post_type_archive_slug(),
 			'rewrite' => [
 				'permastruct' => '/' . get_post_type_single_item_slug() . '/%' . get_post_type() . '%'
 			],
@@ -45,7 +44,7 @@ function register_post_type() {
 			# Override the base names used for labels:
 			'singular' => apply_filters( 'wbl_projects_post_type_singular_name', __('Project', 'wbl-projects') ),
 			'plural'   => apply_filters( 'wbl_projects_post_type_plural_name', get_post_type_name() ),
-			'slug'     => get_post_type_handle()
+			'slug'     => get_post_type_archive_slug()
 		]
 	);
 }
@@ -91,8 +90,6 @@ function get_post_type_archive_slug() {
 			$archive_page_slug = get_page_uri($archive_page);
 
 			$archive_slug = $archive_page_slug ? $archive_page_slug : $archive_slug;
-
-			App::log('slug of the set archive page: ' . $archive_slug);
 		}
 	}
 
@@ -100,7 +97,9 @@ function get_post_type_archive_slug() {
 	$archive_slug = trim($archive_slug, '/');
 
 	# Allow theme to override the selected archive slug
-	return apply_filters( 'wbl_projects_post_type_archive_slug', $archive_slug );
+	$archive_slug = apply_filters( 'wbl_projects_post_type_archive_slug', $archive_slug );
+
+	return $archive_slug;
 }
 
 /**
