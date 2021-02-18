@@ -3,25 +3,14 @@
 Namespace WBL_Projects;
 
 /**
- * Get post type
+ * Setup at regular hook
  */
-function get_post_type() {
-	return 'wbl_project';
-}
+add_action( 'plugins_loaded', function() {
 
-/**
- * Get default post type handle
- */
-function get_post_type_handle() {
-	return apply_filters( 'wbl-projects_post_type_handle', 'projects' );
-}
+	# Register Post type
+	add_action( 'init', __NAMESPACE__ . '\register_post_type' );
 
-/**
- * Get post type name
- */
-function get_post_type_name() {
-	return apply_filters( 'wbl-projects_post_type_name', __('Projects', 'wbl-projects') );
-}
+});
 
 /**
  * Register the Post Type
@@ -33,7 +22,7 @@ function register_post_type() {
 	register_extended_post_type(
 		get_post_type(),
 		[
-			// Interface
+			# Interface
 			'labels' => [
 				'name' => get_post_type_name(),
 				'menu_name' => get_post_type_name()
@@ -41,28 +30,45 @@ function register_post_type() {
 			'menu_icon'     => 'dashicons-portfolio',
 			'menu_position' => 25,
 
-			// Engine
+			# Engine
 			'has_archive'   => get_post_type_archive_slug(),
 			'rewrite' => [
 				'permastruct' => '/' . get_post_type_single_item_slug() . '/%' . get_post_type() . '%'
 			],
 			'show_in_rest' => true,
-			'admin_cols' => apply_filters( 'wbl-projects_admin_cols', [
+			'admin_cols' => apply_filters( 'wbl_projects_admin_cols', [
 				'title',
 				'date'
 			] ),
 		],
 		[
 			# Override the base names used for labels:
-			'singular' => __('Project', 'wbl-projects'),
-			'plural'   => __('Projects', 'wbl-projects'),
-			'slug'     => 'project'
+			'singular' => apply_filters( 'wbl_projects_post_type_singular_name', __('Project', 'wbl-projects') ),
+			'plural'   => apply_filters( 'wbl_projects_post_type_plural_name', get_post_type_name() ),
+			'slug'     => get_post_type_handle()
 		]
 	);
 }
 
-function get_post_type_archive_page() {
-	return get_setting( 'post_type_archive_page' ) ?? null;
+/**
+ * Get post type
+ */
+function get_post_type() {
+	return 'wbl_project';
+}
+
+/**
+ * Get default post type handle
+ */
+function get_post_type_handle() {
+	return apply_filters( 'wbl_projects_post_type_handle', 'projects' );
+}
+
+/**
+ * Get post type name
+ */
+function get_post_type_name() {
+	return apply_filters( 'wbl_projects_post_type_name', __('Projects', 'wbl-projects') );
 }
 
 /**
@@ -70,7 +76,7 @@ function get_post_type_archive_page() {
  */
 function get_post_type_archive_slug() {
 
-	// Set default slug
+	# Set default slug
 	$archive_slug = get_post_type_handle();
 
 	/**
@@ -78,19 +84,20 @@ function get_post_type_archive_slug() {
 	 */
 	if ( $archive_page = get_post_type_archive_page() ) {
 
-		// Make sure archive page is not "page on front"
+		# Make sure archive page is not "page on front"
 		if ( \get_option('page_on_front') != $archive_page ) {
 
-			// Get page slug (including parent pages)
+			# Get page slug (including parent pages)
 			$archive_page_slug = get_page_uri($archive_page);
 
 			$archive_slug = $archive_page_slug ? $archive_page_slug : $archive_slug;
 		}
 	}
 
-	// We don't want no slashes at the outsides
+	# We don't want no slashes at the outsides
 	$archive_slug = trim($archive_slug, '/');
 
+	# Allow theme to override the selected archive slug
 	return apply_filters( 'wbl-projects_post_type_archive_slug', $archive_slug );
 }
 
@@ -99,10 +106,7 @@ function get_post_type_archive_slug() {
  */
 function get_post_type_single_item_slug() {
 
-	$item_slug = get_setting( 'post_type_single_item_slug' ) ?? get_post_type();
+	$item_slug = get_post_type_handle();
 
-	// We don't want no slashes at the outsides
-	$item_slug = trim($item_slug, '/');
-
-	return apply_filters( 'wbl-projects_post_type_single_item_slug', $item_slug );
+	return apply_filters( 'wbl_projects_post_type_single_item_slug', $item_slug );
 }

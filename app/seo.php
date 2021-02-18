@@ -1,6 +1,6 @@
 <?php
 /**
- * Setup support for Slim SEO
+ * Setup support for SEO
  */
 
 namespace WBL_Projects;
@@ -10,7 +10,11 @@ namespace WBL_Projects;
  */
 add_action( 'plugins_loaded', function() {
 
-	/* Page SEO Meta */
+	/**
+	 * Slim SEO
+	 *
+	 * @link https://github.com/elightup/slim-seo/
+	 */
 	add_filter( 'slim_seo_meta_title', __NAMESPACE__ . '\manage_page_meta_title' );
 	add_filter( 'slim_seo_meta_description', __NAMESPACE__ . '\manage_page_meta_description' );
 
@@ -24,9 +28,10 @@ add_action( 'plugins_loaded', function() {
  */
 function manage_page_meta_title( $meta_title ) {
 
-	if ( is_post_type_archive( get_post_type() ) ) {
+	# Post archive page
+	if ( is_post_type_archive() ) {
 
-		// Set meta if we find an archive page
+		# Set the meta title of the selected archive page
 		if ( $post_id = get_post_type_archive_page() ) {
 			$meta_title = get_seo_meta( $post_id, 'title' );
 		}
@@ -42,9 +47,9 @@ function manage_page_meta_title( $meta_title ) {
  */
 function manage_page_meta_description( $meta_description ) {
 
-	if ( is_post_type_archive( get_post_type() ) ) {
+	if ( is_post_type_archive() ) {
 
-		// Set meta if we find an archive page
+		# Set the meta description of the selected archive page
 		if ( $post_id = get_post_type_archive_page() ) {
 			$meta_description = get_seo_meta( $post_id, 'description' );
 		}
