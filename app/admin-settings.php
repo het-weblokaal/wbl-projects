@@ -12,25 +12,16 @@ add_action( 'plugins_loaded', function() {
 
 });
 
-/**
- * Get the settings_name
- */
-function get_settings_prefix() {
-	return 'wbl_projects';
-}
-
-
 function get_setting( $key ) {
 	return get_option( get_setting_name($key), false );
 }
 
-
 function get_setting_name( $key ) {
-	return get_settings_prefix() . "_{$key}";
+	return "wbl_projects_{$key}";
 }
 
 function get_settings_nonce_value() {
-	return 'save_projects_settings';
+	return 'save_wbl_projects_settings';
 }
 
 /**
@@ -43,7 +34,7 @@ function add_settings_page_to_menu() {
 		sprintf( __('%s settings', 'wbl-projects'), get_post_type_name() ), # page name
 		__('Settings', 'wbl-projects'), # menu name
 		'manage_options', # capability
-		get_post_type_handle().'-settings', # page slug
+		'wbl_projects-settings', # page slug
 		__NAMESPACE__ . '\display_settings_page'
 	);
 }
