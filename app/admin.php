@@ -18,7 +18,7 @@ add_action( 'plugins_loaded', function() {
 function add_archive_indicator_in_admin_page_list( $post_states, $post ) {
 
     if ( get_post_type_archive_page() == $post->ID ) {
-        $post_states[get_post_type_handle()] = get_post_type_name() . __( 'pagina', 'wbl-projects' );
+        $post_states[get_post_type_archive_slug()] = get_post_type_name() . __( 'pagina', 'wbl-projects' );
     }
 
     return $post_states;
