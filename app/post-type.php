@@ -107,8 +107,17 @@ function register_post_type() {
 			'show_in_rest' => true,
 			'admin_cols' => apply_filters( 'wbl_projects_admin_cols', [
 				'title',
-				'date'
+				'date' => [
+					'title'    => 'Date',
+					'default'  => 'DESC',
+				]
 			] ),
+			'supports' => [
+				'title',
+				'editor',
+				'thumbnail',
+				'excerpt',
+			]
 		],
 		[
 			# Override the base names used for labels:
