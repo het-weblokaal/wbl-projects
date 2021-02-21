@@ -1,6 +1,6 @@
 <?php
 
-Namespace WBL_Projects;
+namespace WBL_Projects;
 
 /**
  * Setup at regular hook

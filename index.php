@@ -15,7 +15,7 @@
  * GitHub Branch:      main
  */
 
-namespace WBL_Projects;
+use WBL_Projects\App;
 
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {

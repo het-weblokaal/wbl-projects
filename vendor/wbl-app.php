@@ -2,7 +2,7 @@
 /**
  * WordPress App Class for Themes and Plugins
  *
- * Version: 1.0-alpha-4
+ * Version: 1.0-alpha-9
  * Author: Erik Joling | Het Weblokaal <erik.info@hetweblokaal.nl>
  * Author URI: https://www.hetweblokaal.nl/
  *
@@ -10,13 +10,15 @@
  *
  *
  * Usage:
- * 1. Copy this file in the vendor folder (or wherever)
+ * 1. Copy this file in the vendor folder
  * 2. Match the namespace to the theme/plugin
  * 3. Load the file
  * 4. Make use of the methods through static::<method>
+ * +. Customize some properties through static::customize()
  */
 
 namespace WBL_Projects;
+
 
 /**
  * App Class
@@ -26,25 +28,37 @@ namespace WBL_Projects;
 final class App {
 
 	/**
-	 * The Type of app. i.e. theme or plugin
+	 * Arguments with which the app can be influenced
 	 *
-	 * @var string
+	 * @var array
 	 */
-	private static $type;
+	private static $args = [
+		'id'           => '',
+		'name'         => '',
+		'config_dir'   => 'config',
+		'inc_dir'      => 'app',
+		'assets_dir'   => 'public',
+		'src_dir'      => 'resources',
+		'template_dir' => 'app/template',
+		'blocks_dir'   => 'resources/blocks',
+		'lang_dir'     => 'resources/lang',
+		'vendor_dir'   => 'vendor',
+		'wbl_app_dir'  => 'vendor',
+	];
 
 	/**
-	 * Sets the app file. The file which holds the metadata of this app (plugin or theme)
-	 *
-	 * @var string
-	 */
-	private static $meta_file;
-
-	/**
-	 * The id of the app. i.e. the handle, the directoryname
+	 * The id of the app. i.e. the handle
 	 *
 	 * @var string
 	 */
 	private static $id;
+
+	/**
+	 * The slug of the app
+	 *
+	 * @var string
+	 */
+	private static $slug;
 
 	/**
 	 * The name of the app to show to endusers
@@ -54,11 +68,18 @@ final class App {
 	private static $name;
 
 	/**
+	 * The Type of app. i.e. theme or plugin
+	 *
+	 * @var string
+	 */
+	private static $type;
+
+	/**
 	 * Directory path with trailing slash.
 	 *
 	 * @var string
 	 */
-	private static $dir;
+	private static $path;
 
 	/**
 	 * Directory URI with trailing slash.
@@ -68,11 +89,25 @@ final class App {
 	private static $uri;
 
 	/**
+	 * Sets the app file. The file which holds the metadata of this app (plugin or theme)
+	 *
+	 * @var string
+	 */
+	private static $meta_file;
+
+	/**
 	 * Version
 	 *
 	 * @var string
 	 */
 	private static $version;
+
+	/**
+	 * Relative Config folder
+	 *
+	 * @var string
+	 */
+	private static $config_dir;
 
 	/**
 	 * Includes folder (relative to plugin/theme) for app setup and includes
@@ -131,16 +166,77 @@ final class App {
 	private static $mix_manifest = null;
 
 	/**
+	 * WBL App version
+	 *
+	 * @var string
+	 */
+	private static $wbl_app_version = null;
+
+	/**
 	 * Constructor method.
 	 *
 	 * @return void
 	 */
 	private function __construct() {}
 
+	/**
+	 * Customize some App properties
+	 *
+	 * @return void
+	 */
+	public static function customize( $args ) {
+		$args = wp_parse_args( $args, static::$args );
+
+		static::$args = $args;
+	}
+
 
 	/*=============================================================*/
 	/**                        Getters                             */
 	/*=============================================================*/
+
+	/**
+	 * Gets the app id
+	 *
+	 * @return string $id
+	 */
+	public static function get_id() {
+
+		if ( is_null(static::$id) ) {
+			static::set_id();
+		}
+
+		return static::$id;
+	}
+
+	/**
+	 * Gets the app slug
+	 *
+	 * @return string $slug
+	 */
+	public static function get_slug() {
+
+		if ( is_null(static::$slug) ) {
+			static::set_slug();
+		}
+
+		return static::$slug;
+	}
+
+	/**
+	 * Gets the app name
+	 *
+	 * @return string $name
+	 */
+	public static function get_name() {
+
+		if ( is_null(static::$name) ) {
+			static::set_name();
+		}
+
+		return static::$name;
+	}
+
 
 	/**
 	 * Gets the app type
@@ -161,55 +257,13 @@ final class App {
 	 *
 	 * @return string
 	 */
-	public static function get_meta_file() {
+	public static function get_path() {
 
-		if ( is_null(static::$meta_file) ) {
-			static::set_meta_file();
+		if ( is_null(static::$path) ) {
+			static::set_path();
 		}
 
-		return static::$meta_file;
-	}
-
-	/**
-	 * Gets the app id
-	 *
-	 * @return string $id
-	 */
-	public static function get_id() {
-
-		if ( is_null(static::$id) ) {
-			static::set_id();
-		}
-
-		return static::$id;
-	}
-
-	/**
-	 * Gets the app name
-	 *
-	 * @return string $name
-	 */
-	public static function get_name() {
-
-		if ( is_null(static::$name) ) {
-			static::set_name();
-		}
-
-		return static::$name;
-	}
-
-	/**
-	 * Gets the app directory path with trailing slash.
-	 *
-	 * @return string
-	 */
-	public static function get_dir() {
-
-		if ( is_null(static::$dir) ) {
-			static::set_dir();
-		}
-
-		return static::$dir;
+		return static::$path;
 	}
 
 	/**
@@ -227,6 +281,20 @@ final class App {
 	}
 
 	/**
+	 * Gets the app directory path with trailing slash.
+	 *
+	 * @return string
+	 */
+	public static function get_meta_file() {
+
+		if ( is_null(static::$meta_file) ) {
+			static::set_meta_file();
+		}
+
+		return static::$meta_file;
+	}
+
+	/**
 	 * Gets the app version
 	 *
 	 * @return string
@@ -241,7 +309,21 @@ final class App {
 	}
 
 	/**
-	 * Gets the includes directory name
+	 * Gets the config directory
+	 *
+	 * @return string
+	 */
+	public static function get_config_dir() {
+
+		if ( is_null(static::$config_dir) ) {
+			static::set_config_dir();
+		}
+
+		return static::$config_dir;
+	}
+
+	/**
+	 * Gets the includes directory
 	 *
 	 * @return string
 	 */
@@ -255,7 +337,7 @@ final class App {
 	}
 
 	/**
-	 * Gets the app asset directory name
+	 * Gets the app asset directory
 	 *
 	 * @return string
 	 */
@@ -269,7 +351,7 @@ final class App {
 	}
 
 	/**
-	 * Gets the app src directory name
+	 * Gets the app src directory
 	 *
 	 * @return string
 	 */
@@ -283,7 +365,7 @@ final class App {
 	}
 
 	/**
-	 * Gets the app template directory name
+	 * Gets the app template directory
 	 *
 	 * @return string
 	 */
@@ -297,7 +379,7 @@ final class App {
 	}
 
 	/**
-	 * Gets the app blocks directory name
+	 * Gets the app blocks directory
 	 *
 	 * @return string
 	 */
@@ -311,7 +393,7 @@ final class App {
 	}
 
 	/**
-	 * Gets the app language directory name
+	 * Gets the app language directory
 	 *
 	 * @return string
 	 */
@@ -325,7 +407,7 @@ final class App {
 	}
 
 	/**
-	 * Gets the app vendor directory name
+	 * Gets the app vendor directory
 	 *
 	 * @return string
 	 */
@@ -345,19 +427,64 @@ final class App {
 	 */
 	private static function get_mix_manifest() {
 
-		// Get manifest
 		if ( is_null(static::$mix_manifest) ) {
 			static::set_mix_manifest();
 		}
 
-		// Set manifest
 		return static::$mix_manifest;
+	}
+
+	/**
+	 * Gets the WBL App version
+	 *
+	 * @return string
+	 */
+	private static function get_wbl_app_version() {
+
+		if ( is_null(static::$wbl_app_version) ) {
+			static::set_wbl_app_version();
+		}
+
+		return static::$wbl_app_version;
 	}
 
 
 	/*=============================================================*/
 	/**                        Setters                             */
 	/*=============================================================*/
+
+
+	/**
+	 * Sets the app id
+	 *
+	 * @return void
+	 */
+	private static function set_id() {
+
+		# Try to get value from arguments
+		$id = static::$args['id'];
+
+		if ( ! $id ) {
+
+			# Automattically assign id based on the name of the folder
+			$id = static::get_slug();
+		}
+
+		static::$id = $id;
+	}
+
+	/**
+	 * Sets the app slug
+	 *
+	 * @return void
+	 */
+	private static function set_slug() {
+
+		# Get slug from expected folder structure (<app-slug>/vendor/wbl-app.php)
+		$slug = basename(dirname(dirname(__FILE__)));
+
+		static::$slug = $slug;
+	}
 
 	/**
 	 * Sets the app file (root file)
@@ -378,11 +505,37 @@ final class App {
 	}
 
 	/**
+	 * Sets the app name
+	 *
+	 * @return void
+	 */
+	private static function set_name() {
+
+		# Try to get value from arguments
+		$name = static::$args['name'];
+
+		if ( ! $name ) {
+			if (static::is_theme()) {
+				$name = wp_get_theme()->get('Name') ?? $name;
+			}
+			else {
+
+				$name = get_file_data( static::get_meta_file(), ['Name' => 'Plugin Name'] )['Name'] ?? $name;
+				# Note: Can't use `get_plugin_data()` because it doesn't work on the frontend
+			}
+		}
+
+		static::$name = $name;
+	}
+
+	/**
 	 * Sets the app file (root file)
 	 *
 	 * @return void
 	 */
 	private static function set_meta_file() {
+
+		$meta_file = '';
 
 		if (static::is_theme()) {
 			$meta_file = get_theme_file_path('style.css');
@@ -390,21 +543,14 @@ final class App {
 
 		else {
 
-			/** Get plugin file by looking up plugin folder and checking for index.php or <plugin-slug>.php */
+			# Get plugin file by looking up plugin folder and checking for index.php or <plugin-slug>.php
+			$plugin_slug = static::get_slug();
 
-			// Get relative plugin path
-			$relative_file_path = (strpos(__FILE__, WP_PLUGIN_DIR) !== false) ? str_replace(WP_PLUGIN_DIR, '', __FILE__) : false;
-
-			// Get plugin slug
-			$plugin_slug = explode('/', $relative_file_path)[1] ?? false; // record 1 because of leading slash and explode
-
-			if ($plugin_slug) {
-				if ( file_exists( trailingslashit(WP_PLUGIN_DIR) . "{$plugin_slug}/{$plugin_slug}.php" ) ) {
-					$meta_file = trailingslashit(WP_PLUGIN_DIR) . "{$plugin_slug}/{$plugin_slug}.php";
-				}
-				elseif ( file_exists( trailingslashit(WP_PLUGIN_DIR) . "{$plugin_slug}/index.php" ) ) {
-					$meta_file = trailingslashit(WP_PLUGIN_DIR) . "{$plugin_slug}/index.php";
-				}
+			if ( file_exists( static::get_path() . "{$plugin_slug}.php" ) ) {
+				$meta_file = static::get_path() . "{$plugin_slug}.php";
+			}
+			elseif ( file_exists( static::get_path() . "index.php" ) ) {
+				$meta_file = static::get_path() . "index.php";
 			}
 		}
 
@@ -412,50 +558,16 @@ final class App {
 	}
 
 	/**
-	 * Sets the app id
-	 *
-	 * @return void
-	 */
-	private static function set_id() {
-
-		// Try to get from config and fallback to default
-		$id = static::config( 'app', 'id' );
-
-		if ( ! $id ) {
-
-			// Automattically assign id based on the name of the folder
-			$id = basename(dirname(static::get_meta_file()));
-		}
-
-		static::$id = $id;
-	}
-
-	/**
-	 * Sets the app name
-	 *
-	 * @return voname
-	 */
-	private static function set_name() {
-
-		// Try to get from config and fallback to default
-		$name = static::config( 'app', 'name' ) ?? __NAMESPACE__;
-
-		static::$name = $name;
-	}
-
-	/**
 	 * Sets the app directory (with trailing slash)
 	 *
 	 * @return void
 	 */
-	private static function set_dir() {
+	private static function set_path() {
 
-		if (static::is_theme()) {
-			static::$dir = trailingslashit( get_theme_file_path() );
-		}
-		else {
-			static::$dir = plugin_dir_path( static::get_meta_file() );
-		}
+		# We expect this file to be in /dir/vendor.
+		$path = str_replace( 'vendor', '', dirname(__FILE__) );
+
+		static::$path = $path;
 	}
 
 	/**
@@ -466,11 +578,13 @@ final class App {
 	private static function set_uri() {
 
 		if (static::is_theme()) {
-			static::$uri = trailingslashit( get_theme_file_uri() );
+			$uri = trailingslashit( get_theme_file_uri() );
 		}
 		else {
-			static::$uri = plugin_dir_url( static::get_meta_file() );
+			$uri = plugin_dir_url( static::get_path() );
 		}
+
+		static::$uri = $uri;
 	}
 
 	/**
@@ -480,13 +594,17 @@ final class App {
 	 */
 	private static function set_version() {
 
+		$version = '';
+
 		if (static::is_theme()) {
-			static::$version = wp_get_theme()->get('Version') ?? null;
+			$version = wp_get_theme()->get('Version') ?? $version;
 		}
 		else {
-			static::$version = get_file_data( dirname(static::get_meta_file()) . '/' . basename(static::get_meta_file()), array('Version' => 'Version') ) ?? null;
-			// Note: Can't use `get_plugin_data()` because it doesn't work on the frontend
+			$version = get_file_data( static::get_meta_file(), array('Version' => 'Version') )['Version'] ?? $version;
+			# Note: Can't use `get_plugin_data()` because it doesn't work on the frontend
 		}
+
+		static::$version = $version;
 	}
 
 	/**
@@ -496,13 +614,29 @@ final class App {
 	 */
 	private static function set_inc_dir() {
 
-		// Try to get from config and fallback to default
-		$inc_dir = static::config( 'app', 'inc_dir' ) ?? 'app';
+		# Try to get value from arguments
+		$inc_dir = static::$args['inc_dir'];
 
-		// Not leading and trailing slashes
+		# Not leading and trailing slashes
 		$inc_dir = trim($inc_dir, '/');
 
 		static::$inc_dir = $inc_dir;
+	}
+
+	/**
+	 * Sets the app config directory
+	 *
+	 * @return void
+	 */
+	private static function set_config_dir() {
+
+		# Try to get value from arguments
+		$config_dir = static::$args['config_dir'];
+
+		# Not leading and trailing slashes
+		$config_dir = trim($config_dir, '/');
+
+		static::$config_dir = $config_dir;
 	}
 
 	/**
@@ -512,10 +646,10 @@ final class App {
 	 */
 	private static function set_assets_dir() {
 
-		// Try to get from config and fallback to default
-		$assets_dir = static::config( 'app', 'assets_dir' ) ?? 'assets';
+		# Try to get value from arguments
+		$assets_dir = static::$args['assets_dir'];
 
-		// Not leading and trailing slashes
+		# Not leading and trailing slashes
 		$assets_dir = trim($assets_dir, '/');
 
 		static::$assets_dir = $assets_dir;
@@ -528,10 +662,10 @@ final class App {
 	 */
 	private static function set_src_dir() {
 
-		// Try to get from config and fallback to default
-		$src_dir = static::config( 'app', 'src_dir' ) ?? 'src';
+		# Try to get value from arguments
+		$src_dir = static::$args['src_dir'];
 
-		// Not leading and trailing slashes
+		# Not leading and trailing slashes
 		$src_dir = trim($src_dir, '/');
 
 		static::$src_dir = $src_dir;
@@ -544,10 +678,10 @@ final class App {
 	 */
 	private static function set_template_dir() {
 
-		// Try to get from config and fallback to default
-		$template_dir = static::config( 'app', 'template_dir' ) ?? static::get_inc_dir() . '/template';
+		# Try to get value from arguments
+		$template_dir = static::$args['template_dir'];
 
-		// Not leading and trailing slashes
+		# Not leading and trailing slashes
 		$template_dir = trim($template_dir, '/');
 
 		static::$template_dir = $template_dir;
@@ -560,10 +694,10 @@ final class App {
 	 */
 	private static function set_blocks_dir() {
 
-		// Try to get from config and fallback to default
-		$blocks_dir = static::config( 'app', 'blocks_dir' ) ?? 'blocks';
+		# Try to get value from arguments
+		$blocks_dir = static::$args['blocks_dir'];
 
-		// Not leading and trailing slashes
+		# Not leading and trailing slashes
 		$blocks_dir = trim($blocks_dir, '/');
 
 		static::$blocks_dir = $blocks_dir;
@@ -576,10 +710,10 @@ final class App {
 	 */
 	private static function set_lang_dir() {
 
-		// Try to get from config and fallback to default
-		$lang_dir = static::config( 'app', 'lang_dir' ) ?? 'lang';
+		# Try to get value from arguments
+		$lang_dir = static::$args['lang_dir'];
 
-		// Not leading and trailing slashes
+		# Not leading and trailing slashes
 		$lang_dir = trim($lang_dir, '/');
 
 		static::$lang_dir = $lang_dir;
@@ -592,10 +726,10 @@ final class App {
 	 */
 	private static function set_vendor_dir() {
 
-		// Try to get from config and fallback to default
-		$vendor_dir = static::config( 'app', 'vendor_dir' ) ?? 'vendor';
+		# Try to get value from arguments
+		$vendor_dir = static::$args['vendor_dir'];
 
-		// Not leading and trailing slashes
+		# Not leading and trailing slashes
 		$vendor_dir = trim($vendor_dir, '/');
 
 		static::$vendor_dir = $vendor_dir;
@@ -608,14 +742,26 @@ final class App {
 	 */
 	private static function set_mix_manifest() {
 
-		// Get mix manifest file
+		# Get mix manifest file
 		$manifest = static::asset_path( 'mix-manifest.json' );
 
-		// Get the contents of the manifest
+		# Get the contents of the manifest
 		$manifest = file_exists( $manifest ) ? json_decode( file_get_contents( $manifest ), true ) : false;
 
-		// Set manifest
+		# Set manifest
 		static::$mix_manifest = $manifest;
+	}
+
+	/**
+	 * Sets the WBL app version
+	 *
+	 * @return void
+	 */
+	private static function set_wbl_app_version() {
+
+		$wbl_app_version = get_file_data( __FILE__, [ 'Version' => 'Version' ] )['Version'] ?? '';
+
+		static::$wbl_app_version = $wbl_app_version;
 	}
 
 
@@ -650,21 +796,21 @@ final class App {
 	 */
 	public static function config( $name, $key = null, $key_2 = null ) {
 
-		// Get config file
-		$file = static::file_path( "config/{$name}.php" );
+		# Get config file
+		$file = static::file_path( static::get_config_dir() . "/{$name}.php" );
 
-		// Get config data
+		# Get config data
 		$config = file_exists( $file ) ? include( $file ) : [];
 
-		// Get key value
+		# Get key value
 		if ($key) {
 
-			// Get nested key value
+			# Get nested key value
 			if ($key_2) {
 				$config = $config[$key][$key_2] ?? null;
 			}
 
-			// Just get key value
+			# Just get key value
 			else {
 				$config = $config[$key] ?? null;
 			}
@@ -690,7 +836,7 @@ final class App {
 	 * @return string filepath
 	 */
 	public static function file_path( $relative_file = '' ) {
-		return static::get_dir() . $relative_file;
+		return static::get_path() . $relative_file;
 	}
 
 	/**
@@ -701,7 +847,7 @@ final class App {
 	 */
 	public static function inc_path( $relative_file = '' ) {
 
-		// Make sure we have a slash at the front of the path.
+		# Make sure we have a slash at the front of the path.
 		$relative_file = '/' . ltrim( $relative_file, '/' );
 
 		return static::file_path( static::get_inc_dir() . $relative_file );
@@ -715,7 +861,7 @@ final class App {
 	 */
 	public static function asset_uri( $relative_file = '' ) {
 
-		// Make sure we have a slash at the front of the path.
+		# Make sure we have a slash at the front of the path.
 		$relative_file = '/' . ltrim( $relative_file, '/' );
 
 		return static::file_uri( static::get_assets_dir() . $relative_file );
@@ -729,7 +875,7 @@ final class App {
 	 */
 	public static function asset_path( $relative_file = '' ) {
 
-		// Make sure we have a slash at the front of the path.
+		# Make sure we have a slash at the front of the path.
 		$relative_file = '/' . ltrim( $relative_file, '/' );
 
 		return static::file_path( static::get_assets_dir() . $relative_file );
@@ -743,7 +889,7 @@ final class App {
 	 */
 	public static function src_path( $relative_file = '' ) {
 
-		// Make sure we have a slash at the front of the path.
+		# Make sure we have a slash at the front of the path.
 		$relative_file = '/' . ltrim( $relative_file, '/' );
 
 		return static::file_path( static::get_src_dir() . $relative_file );
@@ -757,7 +903,7 @@ final class App {
 	 */
 	public static function template_path( $relative_file = '' ) {
 
-		// Add relative template path
+		# Add relative template path
 		$relative_file = static::template( $relative_file );
 
 		return static::file_path( $relative_file );
@@ -771,7 +917,7 @@ final class App {
 	 */
 	public static function blocks_path( $relative_file = '' ) {
 
-		// Make sure we have a slash at the front of the path.
+		# Make sure we have a slash at the front of the path.
 		$relative_file = '/' . ltrim( $relative_file, '/' );
 
 		return static::file_path( static::get_blocks_dir() . $relative_file );
@@ -785,7 +931,7 @@ final class App {
 	 */
 	public static function lang_path( $relative_file = '' ) {
 
-		// Make sure we have a slash at the front of the path.
+		# Make sure we have a slash at the front of the path.
 		$relative_file = '/' . ltrim( $relative_file, '/' );
 
 		return static::file_path( static::get_lang_dir() . $relative_file );
@@ -799,7 +945,7 @@ final class App {
 	 */
 	public static function vendor_path( $relative_file = '' ) {
 
-		// Make sure we have a slash at the front of the path.
+		# Make sure we have a slash at the front of the path.
 		$relative_file = '/' . ltrim( $relative_file, '/' );
 
 		return static::file_path( static::get_vendor_dir() . $relative_file );
@@ -823,13 +969,13 @@ final class App {
 	 */
 	public static function asset( $file ) {
 
-		// Make sure to trim any slashes from the front of the path.
+		# Make sure to trim any slashes from the front of the path.
 		$file = '/' . ltrim( $file, '/' );
 
-		// Get manifest
+		# Get manifest
 		$manifest = static::get_mix_manifest();
 
-		// If a file is in the manifest, add the cache-busting path
+		# If a file is in the manifest, add the cache-busting path
 		if ( $manifest && isset( $manifest[ $file ] ) ) {
 			$file = $manifest[ $file ];
 		}
@@ -858,7 +1004,7 @@ final class App {
 	 */
 	public static function template( $relative_file = '' ) {
 
-		// Make sure we have a slash at the front of the path.
+		# Make sure we have a slash at the front of the path.
 		$relative_file = '/' . ltrim( $relative_file, '/' );
 
 		return static::get_template_dir() . $relative_file;
@@ -881,7 +1027,11 @@ final class App {
 	 */
 	public static function display_template( $template, $name = null, $args = null ) {
 
-		// Add relative template path
+		# Allow theme to override arguments
+		$args = apply_filters( "wbl/template/args", $args, $template, $name);
+		$args = apply_filters( "wbl/template/{$template}/args", $args, $template, $name);
+
+		# Add relative template path
 		$template = static::template( $template );
 
 		get_template_part( $template, $name, $args );
@@ -948,32 +1098,66 @@ final class App {
 	 * It doesn't matter if WP_DEBUG is true because I also want to be able
 	 * to log on production environment (which has WP_DEBUG disabled)
 	 */
-	public static function status_log( $show_namespace = false )  {
+	public static function status_log()  {
 
-	    // Set properties
-		static::log( '', $show_namespace);
-		static::log( 'STATUS LOG', $show_namespace);
-		static::log( '> type: ' . static::get_type(), $show_namespace);
-		static::log( '> meta_file: ' . static::get_meta_file(), $show_namespace);
-		static::log( '> id: ' . static::get_id(), $show_namespace);
-		static::log( '> version: ' . static::get_version(), $show_namespace);
-		static::log( '---', $show_namespace);
-		static::log( '> dir: ' . static::get_dir(), $show_namespace);
-		static::log( '> uri: ' . static::get_uri(), $show_namespace);
-		static::log( '> inc_dir: ' . static::get_inc_dir(), $show_namespace);
-		static::log( '> assets_dir: ' . static::get_assets_dir(), $show_namespace);
-		static::log( '> src_dir: ' . static::get_src_dir(), $show_namespace);
-		static::log( '> vendor_dir: ' . static::get_vendor_dir(), $show_namespace);
-		static::log( '> template_dir: ' . static::get_template_dir(), $show_namespace);
-		static::log( '> blocks_dir: ' . static::get_blocks_dir(), $show_namespace);
-		static::log( 'END STATUS LOG', $show_namespace);
-		static::log( '', $show_namespace);
+	    # Set properties
+		static::log( '' );
+		static::log( '====== START: APP STATUS LOG ======' );
+		static::log( '' );
+		static::log( '' );
+		static::log( 'MAIN INFO' );
+		static::log( '' );
+		static::log( '   id:        ' . static::get_id() );
+		static::log( '   type:      ' . static::get_type() );
+		static::log( '   name:      ' . static::get_name() );
+		static::log( '   meta_file: ' . static::get_meta_file() );
+		static::log( '   version:   ' . static::get_version() );
+		static::log( '' );
+		static::log( '' );
+		static::log( 'PATHS & URLS' );
+		static::log( '' );
+		static::log( '   path:         ' . static::get_path() );
+		static::log( '   uri:          ' . static::get_uri() );
+		static::log( '   config_dir:   ' . static::get_config_dir() );
+		static::log( '   inc_dir:      ' . static::get_inc_dir() );
+		static::log( '   assets_dir:   ' . static::get_assets_dir() );
+		static::log( '   src_dir:      ' . static::get_src_dir() );
+		static::log( '   vendor_dir:   ' . static::get_vendor_dir() );
+		static::log( '   template_dir: ' . static::get_template_dir() );
+		static::log( '   blocks_dir:   ' . static::get_blocks_dir() );
+		static::log( '' );
+		static::log( '' );
+		static::log( 'APP CLASS' );
+		static::log( '' );
+		static::log( '   namespace: ' . __NAMESPACE__ );
+		static::log( '   file:      ' . __FILE__ );
+		static::log( '   version:   ' . static::get_wbl_app_version() );
+		static::log( '' );
+		static::log( '' );
+		static::log( '======= END: APP STATUS LOG =======' );
+		static::log( '' );
 	}
 }
 
 /****
 
 Changelog
+
+1.0-alpha-9
+- Corrected the mistake of the effort to make this class centralized
+
+1.0-alpha-8
+- Big change: store data in apps array to prevent conflict between data
+
+1.0-alpha-7
+- Improve status_log
+
+1.0-alpha-6
+- Set namespace to WBL
+- Prevent class from loading if it already exists
+
+1.0-alpha-5
+- Add filter to override template arguments
 
 1.0-alpha-4
 - Add function to get relative template file path
