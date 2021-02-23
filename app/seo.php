@@ -15,8 +15,8 @@ add_action( 'plugins_loaded', function() {
 	 *
 	 * @link https://github.com/elightup/slim-seo/
 	 */
-	add_filter( 'slim_seo_meta_title', __NAMESPACE__ . '\manage_page_meta_title' );
-	add_filter( 'slim_seo_meta_description', __NAMESPACE__ . '\manage_page_meta_description' );
+	// add_filter( 'slim_seo_meta_title', __NAMESPACE__ . '\manage_page_meta_title' );
+	// add_filter( 'slim_seo_meta_description', __NAMESPACE__ . '\manage_page_meta_description' );
 
 
 }, 5 );

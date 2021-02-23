@@ -98,7 +98,7 @@ function register_post_type() {
 				'menu_name' => get_post_type_name()
 			],
 			'menu_icon'     => 'dashicons-portfolio',
-			'menu_position' => 25,
+			'menu_position' => 21,
 
 			# Engine
 			'rewrite' => [
