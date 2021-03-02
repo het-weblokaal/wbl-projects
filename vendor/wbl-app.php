@@ -2,7 +2,7 @@
 /**
  * WordPress App Class for Themes and Plugins
  *
- * Version: 1.0-alpha-9
+ * Version: 1.0-alpha-12
  * Author: Erik Joling | Het Weblokaal <erik.info@hetweblokaal.nl>
  * Author URI: https://www.hetweblokaal.nl/
  *
@@ -958,7 +958,13 @@ final class App {
 	 */
 	public static function handle( $append = '' ) {
 
-		return static::get_id() . '-' . $append;
+		$handle = static::get_id();
+
+		if ($append) {
+			$handle .= "-{$append}";
+		}
+
+		return $handle;
 	}
 
 	/**
@@ -991,9 +997,14 @@ final class App {
 	 */
 	public static function svg( $name = '' ) {
 
-		$svg = file_get_contents( static::asset( "svg/{$name}.svg" ) );
+		$svg = '';
 
-		return ($svg) ? $svg : '';
+		if ($name) {
+			$svg = file_get_contents( static::asset( "svg/{$name}.svg" ) );
+			$svg = ($svg) ? $svg : '';
+		}
+
+		return $svg;
 	}
 
 	/**
@@ -1044,7 +1055,7 @@ final class App {
 
 		$environment = wp_get_environment_type();
 
-		$is_debug_mode = ($environment == 'development' || $environment == 'local');
+		$is_debug_mode = ($environment == 'development' || $environment == 'staging');
 
 		/**
 		 * In the future I could also flag environment as development on 'staging' and 'production'
@@ -1052,6 +1063,31 @@ final class App {
 		 */
 
 		return $is_debug_mode;
+	}
+
+	/**
+	 * Check whether the site is local or online
+	 */
+	public static function is_local_environment() {
+
+		# We assume we are online
+		$is_local_environment = false;
+
+		# Parse domain
+	    $domain_array = explode(".", $_SERVER['SERVER_NAME']);
+	    $domain_extension = end($domain_array);
+
+	    # Check domain_extension
+	    if ($domain_extension == 'test' || $domain_extension == 'dev') {
+	    	$is_local_environment = true;
+	    }
+
+	    # Or check if localhost
+	    elseif ( strpos( $_SERVER['SERVER_NAME'], 'localhost' ) !== false ) {
+	    	$is_local_environment = true;
+	    }
+
+		return $is_local_environment;
 	}
 
 	/**
@@ -1142,6 +1178,15 @@ final class App {
 /****
 
 Changelog
+
+1.0-alpha-12
+- Improve handle method to show only the id when no custom handle is given
+
+1.0-alpha-11
+- Add check whether the environment is local
+
+1.0-alpha-10
+- Small improvement of svg method
 
 1.0-alpha-9
 - Corrected the mistake of the effort to make this class centralized

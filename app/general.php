@@ -5,8 +5,6 @@
 
 namespace WBL_Projects;
 
-defined( 'ABSPATH' ) || exit; # Exit if accessed directly.
-
 /**
  * Setup at regular hook
  */
