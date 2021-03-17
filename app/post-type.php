@@ -77,6 +77,8 @@ function get_post_type_single_item_slug() {
 
 	$item_slug = sanitize_title(get_post_type_singular_name());
 
+
+
 	# Allow theme to override the item slug
 	return apply_filters( 'wbl_projects_post_type_single_item_slug', $item_slug );
 }
@@ -93,6 +95,7 @@ function register_post_type() {
 		get_post_type(),
 		[
 			# Interface
+			
 			'labels' => [
 				'name' => get_post_type_name(),
 				'menu_name' => get_post_type_name()
@@ -101,9 +104,11 @@ function register_post_type() {
 			'menu_position' => 21,
 
 			# Engine
+
 			'rewrite' => [
-				'permastruct' => '/' . get_post_type_single_item_slug() . '/%' . get_post_type() . '%'
+				'slug' => get_post_type_single_item_slug()
 			],
+			'has_archive' => get_post_type_archive_slug(),
 			'show_in_rest' => true,
 			'admin_cols' => apply_filters( 'wbl_projects_admin_cols', [
 				'title',
