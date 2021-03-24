@@ -43,7 +43,7 @@ function get_post_type_plural_name() {
 /**
  * Get archive slug for archive permalink
  */
-function get_post_type_archive_slug() {
+function get_post_type_archive_slug( $language = null ) {
 
 	# Set default slug
 	$archive_slug = sanitize_title(get_post_type_plural_name());
@@ -51,7 +51,7 @@ function get_post_type_archive_slug() {
 	/**
 	 * If we have an archive page, overwrite the default archive slug
 	 */
-	if ( $archive_page = get_post_type_archive_page() ) {
+	if ( $archive_page = get_post_type_archive_page( $language ) ) {
 
 		# Make sure archive page is not "page on front"
 		if ( \get_option('page_on_front') != $archive_page ) {
@@ -128,7 +128,6 @@ function register_post_type() {
 			# Override the base names used for labels:
 			'singular' => get_post_type_singular_name(),
 			'plural'   => get_post_type_plural_name(),
-			'slug'     => get_post_type_archive_slug()
 		]
 	);
 }

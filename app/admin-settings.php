@@ -12,12 +12,23 @@ add_action( 'plugins_loaded', function() {
 
 });
 
-function get_setting( $key ) {
-	return get_option( get_setting_name($key), false );
+function get_setting( $key, $language = null ) {
+	return get_option( get_setting_name($key, $language), false );
 }
 
-function get_setting_name( $key ) {
-	return "wbl_projects_{$key}";
+function get_setting_name( $key, $language = null ) {
+
+	$name = "wbl_projects_{$key}";
+
+	# Fallback to current language
+	$language = ($language) ? $language : get_language();
+	
+	# Chang setting name if we have a language and it's not the default language
+	if ( $language && ! is_default_language($language) ) {
+		$name .= '_' . $language;
+	}
+
+	return $name;
 }
 
 function get_settings_nonce_value() {
