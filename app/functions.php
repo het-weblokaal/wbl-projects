@@ -36,7 +36,7 @@ function has_polylang() {
 /**
  * Get current language
  */
-function get_language() {
+function get_current_language() {
 
 	$language = false;
 
@@ -57,7 +57,7 @@ function is_default_language( $language = null ) {
 	$is_default_language = true;
 
 	# Fallback to current language
-	$language = ($language) ? $language : get_language();
+	$language = ($language) ? $language : get_current_language();
 
 	# Check if we have language and polylang is active
 	if ( $language && has_polylang() ) {

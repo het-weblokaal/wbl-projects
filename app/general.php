@@ -61,11 +61,13 @@ function set_archive_page_description( $content ) {
  */
 function pll_set_archive_page_slug_translation( $slugs, $language, &$mo ) {
 
+	$post_type = get_post_type();
+
 	# Hide translation from String Translations settings 
-	$slugs['archive_wbl_project']['hide'] = true;
+	$slugs["archive_{$post_type}"]['hide'] = true;
 
 	# Set the correct archive page
-	$slugs['archive_wbl_project']['translations'][$language->slug] = get_post_type_archive_slug($language->slug);
+	$slugs["archive_{$post_type}"]['translations'][$language->slug] = get_post_type_archive_slug($language->slug);
 
 	return $slugs;
 }

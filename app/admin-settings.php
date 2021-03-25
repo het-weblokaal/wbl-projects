@@ -21,7 +21,7 @@ function get_setting_name( $key, $language = null ) {
 	$name = "wbl_projects_{$key}";
 
 	# Fallback to current language
-	$language = ($language) ? $language : get_language();
+	$language = ($language) ? $language : get_current_language();
 	
 	# Chang setting name if we have a language and it's not the default language
 	if ( $language && ! is_default_language($language) ) {
