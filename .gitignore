@@ -8,3 +8,7 @@
 # Codesniffer
 /phpcs.xml
 /.phpcs.xml
+
+# Don't include POT/PO backups
+*.po~
+*.pot~
