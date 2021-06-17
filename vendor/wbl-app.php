@@ -581,7 +581,7 @@ final class App {
 			$uri = trailingslashit( get_theme_file_uri() );
 		}
 		else {
-			$uri = plugin_dir_url( static::get_path() );
+			$uri = plugin_dir_url( static::get_meta_file() );
 		}
 
 		static::$uri = $uri;
@@ -695,7 +695,7 @@ final class App {
 	private static function set_blocks_dir() {
 
 		# Try to get value from arguments
-		$blocks_dir = static::$args['blocks_dir'];
+		$blocks_dir = static::config('app', 'blocks_dir') ?? static::$args['blocks_dir'];
 
 		# Not leading and trailing slashes
 		$blocks_dir = trim($blocks_dir, '/');
@@ -792,7 +792,7 @@ final class App {
 	 * an array.
 	 *
 	 * @param  string  $name
-	 * @return array
+	 * @return mixed | null
 	 */
 	public static function config( $name, $key = null, $key_2 = null ) {
 

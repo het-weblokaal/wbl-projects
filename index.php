@@ -57,3 +57,17 @@ array_map( function( $file ) {
 	'functions',
 	'seo',
 ] );
+
+# ------------------------------------------------------------------------------
+# Autoload block files.
+# ------------------------------------------------------------------------------
+
+array_map( function( $file ) {
+    require_once( App::blocks_path( "{$file}.php" ) );
+}, [
+    'index',
+    'template-loader',
+
+    // Blocks
+    'projects/index',
+] );

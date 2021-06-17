@@ -16,8 +16,9 @@ const mix = require( 'laravel-mix' );
  * Sets the development path to assets. By default, this is the `/assets`
  * folder in the theme.
  */
-const devPath  = 'resources';
-const pubPath  = 'public';
+const devPath    = 'resources';
+const pubPath    = 'public';
+const blockPath  = 'app/blocks';
 
 /**
  * Sets the path to the generated assets. By default, this is the `/dist` folder
@@ -65,3 +66,9 @@ if (! mix.inProduction()) {
  * @link https://laravel.com/docs/5.6/mix#versioning-and-cache-busting
  */
 mix.version();
+
+/**
+ * Gutenberg blocks
+ */
+mix.react(   `${blockPath}/blocks.js`,         'js'  )
+   .postCss( `${blockPath}/blocks.editor.css`, 'css' );

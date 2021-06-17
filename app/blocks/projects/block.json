@@ -1,0 +1,24 @@
+{
+	"apiVersion": 2,
+	"name": "wbl-projects/projects",
+	"title": "Projects",
+	"category": "layout",
+	"icon": "portfolio",
+	"description": "Shows multiple projects",
+	"keywords": [ "Projects", "Initiatieven" ],
+	"textdomain": "wbl-projects",
+	"attributes": {
+		"postsToShow": {
+			"type": "number",
+			"default": 2
+		}
+	},
+	"supports": {
+		"align"              : [ "wide", "full" ],
+		"anchor"             : true,
+		"className"			 : false,
+		"customClassName"    : true,
+		"defaultStylePicker" : false,
+		"html"               : false
+	}
+}

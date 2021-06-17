@@ -10,6 +10,16 @@ add_action( 'plugins_loaded', function() {
 	# Register Post type
 	add_action( 'init', __NAMESPACE__ . '\register_post_type' );
 
+
+	/**
+	 * The filter is named rest_{post_type}_collection_params. So you need to hook a new filter for each 
+	 * of the custom post types you need to sort.
+	 * @link https://www.timrosswebdevelopment.com/wordpress-rest-api-post-order/
+	 */
+
+	// And this for a custom post type
+	add_filter( 'rest_' . get_post_type() . '_collection_params', __NAMESPACE__ . '\filter_add_rest_orderby_params', 10, 1 );
+
 });
 
 /**
@@ -130,4 +140,12 @@ function register_post_type() {
 			'plural'   => get_post_type_plural_name(),
 		]
 	);
+}
+
+/**
+ * Add menu_order to the list of permitted orderby values
+ */
+function filter_add_rest_orderby_params( $params ) {
+	$params['orderby']['enum'][] = 'menu_order';
+	return $params;
 }
