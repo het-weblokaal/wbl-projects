@@ -15,7 +15,7 @@
  * GitHub Branch:      main
  */
 
-use WBL_Projects\App;
+use WBL\Projects\App;
 
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
@@ -50,12 +50,13 @@ if ( file_exists( App::vendor_path( 'autoload.php' ) ) ) {
 array_map( function( $file ) {
 	require_once( App::inc_path( "{$file}.php" ) );
 }, [
-	'general',
-	'post-type',
-	'admin',
-	'admin-settings',
-	'functions',
-	'seo',
+	'class-helpers',
+	'class-post-type',
+    'class-taxonomy-category',
+	'class-settings',
+	'setup',
+    'filters',
+	// 'extensions/seo',
 ] );
 
 # ------------------------------------------------------------------------------

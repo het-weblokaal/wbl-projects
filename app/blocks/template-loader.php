@@ -1,6 +1,6 @@
 <?php 
 
-namespace WBL_Projects;
+namespace WBL\Projects;
 
 function render_block_template( $template, $args = [] ) {
 	ob_start();
@@ -21,7 +21,6 @@ function display_block_template( $template, $args = [] ) {
 	$template_path = App::blocks_path($template);
 
 	if ( file_exists( $template_path ) ) {
-		App::log($template_path);
 		load_template( $template_path, false, $args );
 	}
 	else {

@@ -1,6 +1,6 @@
 <?php 
 
-namespace WBL_Projects;
+namespace WBL\Projects;
 
 
 // Register dynamic blocks
@@ -14,8 +14,6 @@ add_action( 'enqueue_block_editor_assets', __NAMESPACE__ . '\register_blocks_scr
  */
 function register_blocks_script() {
 
-	App::log(App::asset( 'js/blocks.js' ));
-	
 	// Scripts.
 	wp_enqueue_script(
 		App::handle('blocks'),

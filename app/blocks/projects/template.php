@@ -1,6 +1,6 @@
 <?php 
 
-namespace WBL_Projects;
+namespace WBL\Projects;
 
 // If we have query_args then setup a custom query, otherwise fallback to the default query
 $query = new \WP_Query( $args );

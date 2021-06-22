@@ -17,7 +17,7 @@
  * +. Customize some properties through static::customize()
  */
 
-namespace WBL_Projects;
+namespace WBL\Projects;
 
 
 /**

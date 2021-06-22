@@ -5,7 +5,7 @@
  * It can be overruled by using the filter
  */
 
-namespace WBL_Projects;
+namespace WBL\Projects;
 
 return [
 	'id'           => 'wbl-projects',

@@ -3,7 +3,7 @@
  * Projects
  */
 
-namespace WBL_Projects;
+namespace WBL\Projects;
 
 /**
  * Registers the Projects block.
