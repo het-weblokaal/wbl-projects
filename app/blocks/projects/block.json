@@ -14,7 +14,7 @@
 		}
 	},
 	"supports": {
-		"align"              : [ "wide", "full" ],
+		"align"              : [],
 		"anchor"             : true,
 		"className"			 : false,
 		"customClassName"    : true,

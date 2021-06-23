@@ -2,14 +2,32 @@
 
 namespace WBL\Projects;
 
-// If we have query_args then setup a custom query, otherwise fallback to the default query
-$query = new \WP_Query( $args );
+// Setup query
+$query = new \WP_Query( [
+	'posts_per_page'   => $args['postsToShow'],
+	'post_type'        => 'wbl_project',
+	// 'post_status'      => 'publish',
+	// 'order'            => $attributes['order'],
+	// 'orderby'          => $attributes['orderBy'],
+	// 'suppress_filters' => false,
+] );
+
+// Extra classes
+$extra_classes = [];
+
+// Alignment
+if (! empty($args['align'])) {
+	$extra_classes[] = 'align' . $args['align'];
+}
+
+// Make string of array
+$extra_classes = implode(' ', $extra_classes);
 
 ?>
 
 <?php if ( $query->have_posts() ) : ?>
 
-	<div class="loop loop--wbl-projects">
+	<div class="loop loop--<?= $query->query['post_type'] ?> <?= $extra_classes ?>">
 
 		<?php while ( $query->have_posts() ) : $query->the_post(); ?>
 
@@ -26,7 +44,19 @@ $query = new \WP_Query( $args );
 				</header>
 
 				<footer class="entry__footer">
-					#categoriën
+
+					<div class="entry__categories">
+						<?php if ( $term_list = get_the_term_list( get_the_ID(), TaxCategory::get_taxonomy(), '', ', ', '' ) ) : ?>
+
+							<?= $term_list ?>
+
+						<?php else : ?>
+
+							<?= __( 'No categories', 'wbl-projects' ); ?>
+
+						<?php endif; ?>
+					</div>
+
 				</footer>
 
 			</article>

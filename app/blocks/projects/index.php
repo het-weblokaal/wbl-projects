@@ -22,19 +22,10 @@ function register_projects_block() {
  */
 function render_projects_block( $attributes ) {
 
-	$args = array(
-		'posts_per_page'   => $attributes['postsToShow'],
-		'post_type'        => 'wbl_project',
-		// 'post_status'      => 'publish',
-		// 'order'            => $attributes['order'],
-		// 'orderby'          => $attributes['orderBy'],
-		// 'suppress_filters' => false,
-	);
-
-	$render = apply_filters( 'wbl/projects/block', false, $args );
+	$render = apply_filters( 'wbl/projects/block/render', false, $attributes );
 
 	if ( ! $render ) {
-		$render = render_block_template( 'projects/template.php', $args );
+		$render = render_block_template( 'projects/template.php', $attributes );
 	}
 	
 	return $render;
