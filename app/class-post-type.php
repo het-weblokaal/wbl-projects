@@ -66,6 +66,20 @@ class PostType {
 		// Set the single slug
 		$single_slug = apply_filters('wbl/projects/post_type/single_slug', __( 'projects', 'wbl-projects' ) );
 
+		// If we have an archive page, overwrite the single slug
+		if ( static::has_page_for_projects() ) {
+
+			// Get archive page
+			$archive_page = static::get_page_for_projects();
+
+			// Make sure archive page is not "page on front"
+			if ( $archive_page && \get_option('page_on_front') != $archive_page ) {
+
+				// Get page slug (including parent pages)
+				$single_slug = get_page_uri($archive_page);
+			}
+		}
+
 		return sanitize_title( $single_slug );
 	}
 
