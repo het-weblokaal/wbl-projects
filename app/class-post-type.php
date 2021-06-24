@@ -64,7 +64,7 @@ class PostType {
 	public static function get_single_slug() {
 		
 		// Set the single slug
-		$single_slug = apply_filters('wbl/projects/post_type/single_slug', __( 'projects', 'wbl-projects' ) );
+		$single_slug = apply_filters('wbl/projects/post_type/single_slug', sanitize_title( static::get_labels()['name'] ) );
 
 		// If we have an archive page, overwrite the single slug
 		if ( static::has_page_for_projects() ) {

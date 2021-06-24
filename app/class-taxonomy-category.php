@@ -14,7 +14,12 @@ class TaxCategory {
 	 */
 	public static function setup()	{
 
-		add_action( 'init', __CLASS__.'::register_taxonomy' );
+		/**
+		 * Register before post_type to fix problem with permalinks
+		 * 
+		 * @link https://cnpagency.com/blog/the-right-way-to-do-wordpress-custom-taxonomy-rewrites/
+		 */
+		add_action( 'init', __CLASS__.'::register_taxonomy', 9 );
 		
 		// Add taxonomy to the list of projects in the admin
 		add_filter( 'wbl/projects/post_type/admin_columns', __CLASS__.'::add_admin_cols' );
@@ -34,7 +39,7 @@ class TaxCategory {
 	 * 
 	 * @return array
 	 */
-	private static function get_labels() {
+	public static function get_labels() {
 
 		$labels = [
 			'name'                       => _x( 'Categories', 'taxonomy general name' ),
@@ -63,25 +68,34 @@ class TaxCategory {
 			'back_to_items'              => __( '&larr; Go to Categories' ),
 		];
 
-		return apply_filters( 'wbl/projects/taxonomy/category/labels', $labels );
+		return apply_filters( 'wbl/projects/taxonomy/'.static::get_taxonomy().'/labels', $labels );
 	}
 
 	/**
 	 * Register taxonomies
 	 *
 	 * @link https://github.com/johnbillion/extended-cpts/wiki/Registering-taxonomies
+	 * @link https://developer.wordpress.org/reference/functions/register_taxonomy/
 	 */
 	public static function register_taxonomy() {
+
+		// Add archive slug and taxonomy name to the taxonomy slug
+		$tax_slug = PostType::get_archive_slug() . '/' . sanitize_title( static::get_labels()['singular_name'] );
+
+		// Allow themes to override the taxonomy slug (for example to remove the archive slug from start)
+		$tax_slug = apply_filters('wbl/projects/taxonomy/'.static::get_taxonomy().'/slug', $tax_slug );
 
 		$args = [
 			'labels' => static::get_labels(),
 			'hierarchical' => false,
 			'meta_box' => 'simple',
-		];		
+			'rewrite' => [
+				'slug' => $tax_slug,
+				'with_front' => false
+			],
+		];
 
-		/**
-	 	 * Register `category` taxonomy
-	 	 */
+		// Register the taxonomy
 		register_extended_taxonomy( static::get_taxonomy(), PostType::get_post_type(), $args );
 	}
 
