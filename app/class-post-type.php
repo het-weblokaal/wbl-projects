@@ -30,6 +30,15 @@ class PostType {
 	}
 
 	/**
+	 * Get the post type name
+	 * 
+	 * @return string
+	 */
+	public static function get_name()	{
+		return static::get_labels()['name'];
+	}
+
+	/**
 	 * Get slug for the projects archive permalink
 	 * 
 	 * @return string
