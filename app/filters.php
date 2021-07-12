@@ -27,8 +27,7 @@ function set_archive_page_description( $content ) {
 
 	if ( is_post_type_archive( PostType::get_post_type() ) ) {
 		if ( $post_id = PostType::get_page_for_projects() ) {
-			$content = get_post_field( 'post_content', $post_id );
-			$content = apply_filters( 'the_content', $content );
+			$content = get_post_field( 'post_content', $post_id, 'raw' );
 		}
 	}
 
