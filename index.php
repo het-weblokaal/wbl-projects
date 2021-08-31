@@ -15,60 +15,16 @@
  * GitHub Branch:      main
  */
 
-use WBL\Projects\App;
-
 // Exit if accessed directly.
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+defined( 'ABSPATH' ) || exit;
 
-# ------------------------------------------------------------------------------
-# Load Dependencies
-# ------------------------------------------------------------------------------
+if ( wp_get_environment_type() == 'local' && file_exists( '/srv/www/local/wbl-projects/app/bootstrap.php' ) ) {
 
-/**
- * App Class
- */
-if ( file_exists( __DIR__ . '/vendor/wbl-app.php' ) ) {
-	require_once( __DIR__ . '/vendor/wbl-app.php' );
+    // Local plugin bootstrap
+    require_once( '/srv/www/local/wbl-projects/app/bootstrap.php' );
 }
 else {
-	exit;
+
+    // Normal plugin bootstrap
+    require_once( __DIR__ . '/app/bootstrap.php' );
 }
-
-/**
- * Composer Dependancies
- */
-if ( file_exists( App::vendor_path( 'autoload.php' ) ) ) {
-	require_once( App::vendor_path( 'autoload.php' ) );
-}
-
-# ------------------------------------------------------------------------------
-# Autoload functions files.
-# ------------------------------------------------------------------------------
-
-array_map( function( $file ) {
-	require_once( App::inc_path( "{$file}.php" ) );
-}, [
-	'class-helpers',
-	'class-post-type',
-    'class-taxonomy-category',
-	'class-settings',
-	'setup',
-    'filters',
-	// 'extensions/seo',
-] );
-
-# ------------------------------------------------------------------------------
-# Autoload block files.
-# ------------------------------------------------------------------------------
-
-array_map( function( $file ) {
-    require_once( App::blocks_path( "{$file}.php" ) );
-}, [
-    'index',
-    'template-loader',
-
-    // Blocks
-    'projects/index',
-] );
