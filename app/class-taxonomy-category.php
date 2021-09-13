@@ -79,24 +79,29 @@ class TaxCategory {
 	 */
 	public static function register_taxonomy() {
 
-		// Add archive slug and taxonomy name to the taxonomy slug
-		$tax_slug = PostType::get_archive_slug() . '/' . sanitize_title( static::get_labels()['singular_name'] );
+		// Allow taxonomy to be disabled
+		if ( apply_filters( 'wbl/projects/taxonomy/'.static::get_taxonomy(), true ) ) {
 
-		// Allow themes to override the taxonomy slug (for example to remove the archive slug from start)
-		$tax_slug = apply_filters('wbl/projects/taxonomy/'.static::get_taxonomy().'/slug', $tax_slug );
+			// Add archive slug and taxonomy name to the taxonomy slug
+			$tax_slug = PostType::get_archive_slug() . '/' . sanitize_title( static::get_labels()['singular_name'] );
 
-		$args = [
-			'labels' => static::get_labels(),
-			'hierarchical' => false,
-			'meta_box' => 'simple',
-			'rewrite' => [
-				'slug' => $tax_slug,
-				'with_front' => false
-			],
-		];
+			// Allow themes to override the taxonomy slug (for example to remove the archive slug from start)
+			$tax_slug = apply_filters('wbl/projects/taxonomy/'.static::get_taxonomy().'/slug', $tax_slug );
 
-		// Register the taxonomy
-		register_extended_taxonomy( static::get_taxonomy(), PostType::get_post_type(), $args );
+			$args = [
+				'labels' => static::get_labels(),
+				'hierarchical' => false,
+				'meta_box' => 'simple',
+				'rewrite' => [
+					'slug' => $tax_slug,
+					'with_front' => false
+				],
+			];
+
+			// Register the taxonomy
+			register_extended_taxonomy( static::get_taxonomy(), PostType::get_post_type(), $args );
+
+		}
 	}
 
 	/*--------------------------------------------------------------
@@ -108,9 +113,13 @@ class TaxCategory {
 	 */
 	public static function add_admin_cols( $admin_cols ) {
 
-		$admin_cols[static::get_taxonomy()] = [
-			'taxonomy' => static::get_taxonomy()
-		];
+		// Allow taxonomy to be disabled
+		if ( apply_filters( 'wbl/projects/taxonomy/'.static::get_taxonomy(), true ) ) {
+
+			$admin_cols[static::get_taxonomy()] = [
+				'taxonomy' => static::get_taxonomy()
+			];
+		}
 
 		return $admin_cols;
 	}
