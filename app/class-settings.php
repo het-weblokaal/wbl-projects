@@ -92,7 +92,7 @@ class Settings {
 
 		add_submenu_page(
 			'edit.php?post_type='.PostType::get_post_type(), // parent slug
-			__('Project Settings', 'wbl-projects'), // page name
+			sprintf( _x('Settings for %s', 'wbl_project', 'wbl-projects'), PostType::get_name() ),
 			__('Settings', 'wbl-projects'), // menu name
 			'manage_options', // capability
 			PostType::get_post_type() . '-settings', // page slug

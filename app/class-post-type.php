@@ -46,7 +46,7 @@ class PostType {
 	public static function get_archive_slug()	{
 
 		// Set the archive slug
-		$archive_slug = apply_filters('wbl/projects/post_type/archive_slug', __( 'projects', 'wbl-projects' ) );
+		$archive_slug = static::get_labels()['name'];
 
 		// If we have an archive page, overwrite the archive slug
 		if ( static::has_page_for_projects() ) {
@@ -62,6 +62,9 @@ class PostType {
 			}
 		}
 
+		// Allow themes to overwrite the slug
+		$archive_slug = apply_filters('wbl/projects/post_type/archive_slug', $archive_slug );
+
 		return sanitize_title( $archive_slug );
 	}
 
@@ -72,22 +75,25 @@ class PostType {
 	 */
 	public static function get_single_slug() {
 		
-		// Set the single slug
-		$single_slug = apply_filters('wbl/projects/post_type/single_slug', sanitize_title( static::get_labels()['name'] ) );
+		// Default slug is the name of the 
+		$single_slug = static::get_labels()['singular_name'];
 
-		// If we have an archive page, overwrite the single slug
-		if ( static::has_page_for_projects() ) {
+		// // If we have an archive page, overwrite the single slug
+		// if ( static::has_page_for_projects() ) {
 
-			// Get archive page
-			$archive_page = static::get_page_for_projects();
+		// 	// Get archive page
+		// 	$archive_page = static::get_page_for_projects();
 
-			// Make sure archive page is not "page on front"
-			if ( $archive_page && \get_option('page_on_front') != $archive_page ) {
+		// 	// Make sure archive page is not "page on front"
+		// 	if ( $archive_page && \get_option('page_on_front') != $archive_page ) {
 
-				// Get page slug (including parent pages)
-				$single_slug = get_page_uri($archive_page);
-			}
-		}
+		// 		// Get page slug (including parent pages)
+		// 		$single_slug = get_page_uri($archive_page);
+		// 	}
+		// }
+
+		// Allow themes to overwrite the slug
+		$single_slug = apply_filters('wbl/projects/post_type/single_slug', $single_slug );
 
 		return sanitize_title( $single_slug );
 	}
@@ -107,7 +113,7 @@ class PostType {
 	 * 
 	 * @return array
 	 */
-	private static function get_labels() {
+	public static function get_labels() {
 
 		$labels = [
 			'name'                     => _x( 'Projects', 'post type general name', 'wbl-projects' ),
@@ -233,7 +239,7 @@ class PostType {
 	public static function add_archive_indicator_in_admin_page_list( $post_states, $post ) {
 
 	    if ( static::get_page_for_projects() == $post->ID ) {
-	        $post_states[static::get_archive_slug()] = _x( 'Projects page','Indicator for archive in admin page list', 'wbl-projects' );
+	        $post_states[static::get_archive_slug()] = sprintf( _x( '%s page','Indicator for archive in admin page list', 'wbl-projects' ), PostType::get_name() );
 	    }
 
 	    return $post_states;

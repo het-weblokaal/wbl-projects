@@ -36,6 +36,7 @@ array_map( function( $file ) {
     'setup',
     'filters',
     // 'extensions/seo',
+    // 'extensions/multilingual',
 ] );
 
 
