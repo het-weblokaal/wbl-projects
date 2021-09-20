@@ -24,9 +24,11 @@ class Settings {
 	 * 
 	 * @return mixed
 	 */
-	public static function get_setting( $key ) {
+	public static function get( $key ) {
 
-		return get_option( static::setting_name($key), false );
+		$name = static::name($key);
+
+		return get_option( $name, false );
 	}
 
 	/**
@@ -34,9 +36,11 @@ class Settings {
 	 * 
 	 * @return void
 	 */
-	public static function save_setting( $key, $value ) {
+	public static function save( $key, $value ) {
 
-		update_option( static::setting_name($key), $value );
+		$name = static::name($key);
+
+		update_option( $name, $value );
 	}
 
 	/**
@@ -44,21 +48,9 @@ class Settings {
 	 * 
 	 * @return string
 	 */
-	private static function setting_name( $key ) {
+	private static function name( $key ) {
 
-		$setting_name = "wbl_projects_{$key}";
-
-		// Add language prefix if applicable
-		if ( Helpers::has_polylang() ) {
-
-			$current_language = Helpers::get_current_language();
-
-			if ( ! Helpers::is_default_language( $current_language ) ) {
-				$setting_name .= '_' . $current_language;
-			}
-		}
-
-		return $setting_name;
+		return "wbl_projects_{$key}";
 	}
 
 	/**
@@ -66,24 +58,24 @@ class Settings {
 	 * 
 	 * @return string
 	 */
-	public static function get_settings_nonce_value() {
+	public static function get_nonce_value() {
 		return 'save_wbl_projects_settings';
 	}
 
-	/**
-	 * Add a settings link to the the plugin on the plugin page
-	 *
-	 * @param array $links An array of plugin action links.
-	 *
-	 * @return array
-	 */
-	public static function settings_link( array $links ): array {
-		$href          = admin_url( 'edit.php?post_type='.PostType::get_post_type() );
-		$settings_link = '<a href="' . $href . '">' . __( 'Settings', 'wbl-projects' ) . '</a>'; // phpcs:ignore WordPress.WP.I18n.MissingArgDomain
-		array_unshift( $links, $settings_link );
+	// /**
+	//  * Add a settings link to the the plugin on the plugin page
+	//  *
+	//  * @param array $links An array of plugin action links.
+	//  *
+	//  * @return array
+	//  */
+	// public static function settings_link( array $links ): array {
+	// 	$href          = admin_url( 'edit.php?post_type='.PostType::get_post_type() );
+	// 	$settings_link = '<a href="' . $href . '">' . __( 'Settings', 'wbl-projects' ) . '</a>'; // phpcs:ignore WordPress.WP.I18n.MissingArgDomain
+	// 	array_unshift( $links, $settings_link );
 
-		return $links;
-	}
+	// 	return $links;
+	// }
 
 	/**
 	 * Register the menu page for the settings
@@ -105,26 +97,32 @@ class Settings {
 	/**
 	 * Save options page
 	 */
-	public static function try_save_settings() {
+	public static function try_save() {
 
 		// Abort if no POST-data or no valid referer
-		if ( empty($_POST) || !check_admin_referer(static::get_settings_nonce_value()) ) {
+		if ( empty($_POST) || !check_admin_referer(static::get_nonce_value()) ) {
 			return false;
 		}
 
 		// Get options
-		$page_for_projects = $_POST[static::setting_name('page_for_projects')] ?? false;
+		$page_for_projects = $_POST[static::name('page_for_projects')] ?? null;
 
-		// Sanitize
-		$page_for_projects = sanitize_key($page_for_projects);
+		// Only save when we have a value
+		if ($page_for_projects) {
 
-		// Save
-		static::save_setting('page_for_projects', $page_for_projects);
+			// Sanitize
+			$page_for_projects = sanitize_key($page_for_projects);
 
-		// Flush
-		flush_rewrite_rules();
+			// Save
+			static::save('page_for_projects', $page_for_projects);
 
-		// Saving succesful
-		return true;
+			// Flush
+			flush_rewrite_rules();
+
+			// Saving succesful
+			return true;
+		}
+
+		return false;
 	}
 }

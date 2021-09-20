@@ -60,6 +60,4 @@ class Helpers {
 
 		return $is_default_language;
 	}
-
-
 }

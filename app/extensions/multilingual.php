@@ -38,7 +38,28 @@ function pll_set_archive_page_slug_translation( $slugs, $language, &$mo ) {
 	$slugs["archive_{$post_type}"]['hide'] = true;
 
 	// Set the correct archive page
-	$slugs["archive_{$post_type}"]['translations'][$language->slug] = get_post_type_archive_slug($language->slug);
+	$slugs["archive_{$post_type}"]['translations'][$language->slug] = pll_get_achive_slug( $language->slug );
 
 	return $slugs;
+}
+
+function pll_get_achive_slug( $language = null ) {
+
+    // Default slug
+    $archive_slug = PostType::get_archive_slug();
+    
+    if ( Helpers::has_polylang() && $language && ! Helpers::is_default_language( $language ) ) {
+
+        // Get archive page
+        $archive_page = PostType::get_page_for_projects();
+
+        // Get translated page
+        $archive_page = pll_get_post( $archive_page, $language );
+
+        // Set slug
+        $archive_slug = ($archive_page) ? get_page_uri($archive_page) : $archive_slug;
+    }
+
+
+    return $archive_slug;
 }

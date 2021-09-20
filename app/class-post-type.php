@@ -45,7 +45,7 @@ class PostType {
 	 */
 	public static function get_archive_slug()	{
 
-		// Set the archive slug
+		// Default archive slug
 		$archive_slug = static::get_labels()['name'];
 
 		// If we have an archive page, overwrite the archive slug
@@ -63,7 +63,7 @@ class PostType {
 		}
 
 		// Allow themes to overwrite the slug
-		$archive_slug = apply_filters('wbl/projects/post_type/archive_slug', $archive_slug );
+		$archive_slug = apply_filters( 'wbl/projects/post_type/archive_slug', $archive_slug );
 
 		return sanitize_title( $archive_slug );
 	}
@@ -74,26 +74,9 @@ class PostType {
 	 * @return string
 	 */
 	public static function get_single_slug() {
-		
-		// Default slug is the name of the 
-		$single_slug = static::get_labels()['singular_name'];
-
-		// // If we have an archive page, overwrite the single slug
-		// if ( static::has_page_for_projects() ) {
-
-		// 	// Get archive page
-		// 	$archive_page = static::get_page_for_projects();
-
-		// 	// Make sure archive page is not "page on front"
-		// 	if ( $archive_page && \get_option('page_on_front') != $archive_page ) {
-
-		// 		// Get page slug (including parent pages)
-		// 		$single_slug = get_page_uri($archive_page);
-		// 	}
-		// }
 
 		// Allow themes to overwrite the slug
-		$single_slug = apply_filters('wbl/projects/post_type/single_slug', $single_slug );
+		$single_slug = apply_filters('wbl/projects/post_type/single_slug', static::get_labels()['singular_name'] );
 
 		return sanitize_title( $single_slug );
 	}
@@ -105,7 +88,7 @@ class PostType {
 	 */
 	public static function get_page_for_projects() {
 
-		return Settings::get_setting( 'page_for_projects' );
+		return Settings::get( 'page_for_projects' );
 	}
 
 	/**
