@@ -14,20 +14,24 @@ add_action( 'enqueue_block_editor_assets', __NAMESPACE__ . '\register_blocks_scr
  */
 function register_blocks_script() {
 
-	// Scripts.
-	wp_enqueue_script(
-		App::handle('blocks'),
-		App::asset( 'js/blocks.js' ),
-		[
-			'lodash',
-			'wp-blocks',
-			'wp-components',
-			'wp-data',
-			'wp-editor',
-			'wp-element',
-			'wp-i18n',
-		],
-		null,
-		true // Enqueue the script in the footer.
-	);
+	// Allow projects block to be disabled
+	if ( apply_filters( 'wbl/projects/blocks/projects', true ) ) {
+
+		// Scripts.
+		wp_enqueue_script(
+			App::handle('blocks'),
+			App::asset( 'js/blocks.js' ),
+			[
+				'lodash',
+				'wp-blocks',
+				'wp-components',
+				'wp-data',
+				'wp-editor',
+				'wp-element',
+				'wp-i18n',
+			],
+			null,
+			true // Enqueue the script in the footer.
+		);
+	}
 }
