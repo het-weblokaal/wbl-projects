@@ -18,13 +18,5 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-if ( wp_get_environment_type() == 'local' && file_exists( '/srv/www/local/wbl-projects/app/bootstrap.php' ) ) {
-
-    // Local plugin bootstrap
-    require_once( '/srv/www/local/wbl-projects/app/bootstrap.php' );
-}
-else {
-
-    // Normal plugin bootstrap
-    require_once( __DIR__ . '/app/bootstrap.php' );
-}
+// Bootstrap plugin
+require_once( __DIR__ . '/app/bootstrap.php' );
