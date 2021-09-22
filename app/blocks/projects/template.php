@@ -31,7 +31,7 @@ $extra_classes = implode(' ', $extra_classes);
 
 		<?php while ( $query->have_posts() ) : $query->the_post(); ?>
 
-			<article class="entry entry--project">
+			<article class="entry entry--wbl_project">
 
 				<div class="entry__image">
 					<?= the_post_thumbnail( 'thumbnail') ?>
@@ -43,21 +43,25 @@ $extra_classes = implode(' ', $extra_classes);
 					</h3>
 				</header>
 
-				<footer class="entry__footer">
+				<?php if ( apply_filters( 'wbl/projects/taxonomy/'.TaxCategory::get_taxonomy(), true ) ) : ?>
 
-					<div class="entry__categories">
-						<?php if ( $term_list = get_the_term_list( get_the_ID(), TaxCategory::get_taxonomy(), '', ', ', '' ) ) : ?>
+					<footer class="entry__footer">
 
-							<?= $term_list ?>
+						<div class="entry__categories">
+							<?php if ( $term_list = get_the_term_list( get_the_ID(), TaxCategory::get_taxonomy(), '', ', ', '' ) ) : ?>
 
-						<?php else : ?>
+								<?= $term_list ?>
 
-							<?= __( 'No categories', 'wbl-projects' ); ?>
+							<?php else : ?>
 
-						<?php endif; ?>
-					</div>
+								<?= __( 'No categories', 'wbl-projects' ); ?>
 
-				</footer>
+							<?php endif; ?>
+						</div>
+
+					</footer>
+
+				<?php endif; ?>
 
 			</article>
 

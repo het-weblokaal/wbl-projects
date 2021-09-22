@@ -48,7 +48,6 @@ array_map( function( $file ) {
     require_once( App::blocks_path( "{$file}.php" ) );
 }, [
     'index',
-    'template-loader',
 
     // Blocks
     'projects/index',
