@@ -7,16 +7,16 @@ namespace WBL\Projects;
 
 
 /**
- * Inform WordPress of custom language directory
- */
-add_action( 'init', function() {
-	load_plugin_textdomain( 'wbl-projects', false, App::get_slug() . '/' . App::get_lang_dir() );
-} );
-
-/**
  * Setup at regular hook
  */
 add_action( 'plugins_loaded', function() {
+
+	/**
+	 * Inform WordPress of custom language directory
+	 */
+	add_action( 'init', function() {
+		load_plugin_textdomain( 'wbl-projects', false, App::get_slug() . '/' . App::get_lang_dir() );
+	} );
 
 	// Setup Post Type
 	PostType::setup();
@@ -25,7 +25,7 @@ add_action( 'plugins_loaded', function() {
 	TaxCategory::setup();
 
 	// Setup Settings
-	Settings::setup();
+	Admin::setup();
 
 	// Set archive title and description
 	add_filter( 'post_type_archive_title', 'WBL\Projects\set_archive_page_title', 10, 2 );

@@ -29,14 +29,14 @@ if ( file_exists( App::vendor_path( 'autoload.php' ) ) ) {
 array_map( function( $file ) {
     require_once( App::inc_path( "{$file}.php" ) );
 }, [
-    'class-helpers',
     'class-post-type',
     'class-taxonomy-category',
     'class-settings',
+    'class-multilanguage',
+    'admin/class-admin',
     'setup',
     'filters',
     // 'extensions/seo',
-    'extensions/multilingual',
 ] );
 
 
