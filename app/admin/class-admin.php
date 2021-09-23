@@ -21,6 +21,9 @@ class Admin {
 
 		// Options page
 		add_action( 'admin_menu', __CLASS__.'::register_menu_page' );
+
+		// Admin page archive indicator
+		add_filter( 'display_post_states', __CLASS__.'::add_archive_indicator_in_page_list', 10, 2);
 	}	
 
 	/**
@@ -70,5 +73,28 @@ class Admin {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Show indicator which page is the projects archive page in page overview
+	 */
+	public static function add_archive_indicator_in_page_list( $post_states, $post ) {
+
+	    $archive_pages = [ Settings::get('page_for_projects') ];
+
+	    if (Multilanguage::has_polylang()) {
+	    	foreach (pll_languages_list() as $language) {
+	    		
+	    		if ( $translated_archive_page = Multilanguage::get_translated_achive_page($language) ) {
+	    			$archive_pages[] = $translated_archive_page;
+	    		}
+	    	}
+	    }
+
+	    if ( in_array( $post->ID, $archive_pages ) ) {
+	        $post_states['page_for_projects'] = sprintf( _x( '%s page','Indicator for archive in admin page list', 'wbl-projects' ), PostType::get_name() );
+	    }
+
+	    return $post_states;
 	}
 }

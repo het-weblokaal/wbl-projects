@@ -15,9 +15,7 @@ class PostType {
 	public static function setup()	{
 
 		add_action( 'init', __CLASS__.'::register_post_type' );
-		
-		// Admin page archive indicator
-		add_filter( 'display_post_states', __CLASS__.'::add_archive_indicator_in_admin_page_list', 10, 2);
+
 	}	
 
 	/**
@@ -48,14 +46,14 @@ class PostType {
 		// Default archive slug
 		$archive_slug = static::get_labels()['name'];
 
+		// Get archive page
+		$archive_page = Settings::get( 'page_for_projects' );
+
 		// If we have an archive page, overwrite the archive slug
-		if ( static::has_page_for_projects() ) {
+		if ( $archive_page ) {
 
-			// Get archive page
-			$archive_page = static::get_page_for_projects();
-
-			// Make sure archive page is not "page on front"
-			if ( $archive_page && \get_option('page_on_front') != $archive_page ) {
+			// Make sure archive page is not "page on front" to prevent conflict
+			if ( \get_option('page_on_front') != $archive_page ) {
 
 				// Get page slug (including parent pages)
 				$archive_slug = get_page_uri($archive_page);
@@ -86,9 +84,15 @@ class PostType {
 	 * 
 	 * @return string
 	 */
-	public static function get_page_for_projects() {
+	public static function get_archive_page() {
 
-		return Settings::get( 'page_for_projects' );
+		$archive_page = Settings::get( 'page_for_projects' );
+
+		if ( $translated_archive_page = Multilanguage::get_translated_achive_page() ) {
+			$archive_page = $translated_archive_page;
+		}
+
+		return $archive_page;
 	}
 
 	/**
@@ -201,31 +205,5 @@ class PostType {
 		register_extended_post_type( static::get_post_type(), $args );
 	}
 
-
-	/*--------------------------------------------------------------
-	# Utilities 
-	--------------------------------------------------------------*/
-
-	/**
-	 * Check if there is a page assigned to the post-type archive
-	 * 
-	 * @return boolean
-	 */
-	public static function has_page_for_projects() {
-
-		return !! static::get_page_for_projects();
-	}
-
-	/**
-	 * Show indicator which page is the projects archive page in page overview
-	 */
-	public static function add_archive_indicator_in_admin_page_list( $post_states, $post ) {
-
-	    if ( static::get_page_for_projects() == $post->ID ) {
-	        $post_states[static::get_archive_slug()] = sprintf( _x( '%s page','Indicator for archive in admin page list', 'wbl-projects' ), PostType::get_name() );
-	    }
-
-	    return $post_states;
-	}
 
 }

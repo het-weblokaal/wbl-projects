@@ -30,9 +30,9 @@ class SEO {
 	public static function slim_seo_meta_title_on_archive_page( $title, $title_obj ) {
 
 		// Check if we are on archive page and if we have an assigned page
-		if ( is_post_type_archive( PostType::get_post_type() ) && PostType::get_page_for_projects() ) {
+		if ( is_post_type_archive( PostType::get_post_type() ) && PostType::get_archive_page() ) {
 		
-			$title = $title_obj->get_singular_value( PostType::get_page_for_projects() );
+			$title = $title_obj->get_singular_value( PostType::get_archive_page() );
 		}
 
 		return $title;
@@ -46,9 +46,9 @@ class SEO {
 	public static function slim_seo_meta_description_on_archive_page( $description, $description_obj ) {
 
 		// Check if we are on archive page and if we have an assigned page
-		if ( is_post_type_archive( PostType::get_post_type() ) && PostType::get_page_for_projects() ) {
+		if ( is_post_type_archive( PostType::get_post_type() ) && PostType::get_archive_page() ) {
 		
-			$description = $description_obj->get_singular_value( PostType::get_page_for_projects() );
+			$description = $description_obj->get_singular_value( PostType::get_archive_page() );
 		}
 
 		return $description;
@@ -63,10 +63,10 @@ class SEO {
 	public static function set_document_title_on_projects_archive_page( $document_title_parts ) {
 
 		// Check if we are on archive page and if we have an assigned page
-		if ( is_post_type_archive( PostType::get_post_type() ) && PostType::get_page_for_projects() ) {
+		if ( is_post_type_archive( PostType::get_post_type() ) && PostType::get_archive_page() ) {
 
 			// Assign the archive page title
-			$document_title_parts['title'] = get_the_title( PostType::get_page_for_projects() );
+			$document_title_parts['title'] = get_the_title( PostType::get_archive_page() );
 		}	
 
 		return $document_title_parts;

@@ -15,7 +15,7 @@ class Multilanguage {
 	public static function setup()	{
 
 		// Set the correct translated archive page slug
-		add_action( 'pll_translated_slugs', __CLASS__.'::set_archive_page_slug_translation', 10, 3 );
+		add_action( 'pll_translated_slugs', __CLASS__.'::set_translated_slugs_for_archive', 10, 3 );
 	}
 
 	/**
@@ -29,7 +29,7 @@ class Multilanguage {
 	 * @param PLL_MO       $mo       Strings translations object.
 	 * @return array
 	 */
-	public static function set_archive_page_slug_translation( $slugs, $language, &$mo ) {
+	public static function set_translated_slugs_for_archive( $slugs, $language, &$mo ) {
 
 		$post_type = PostType::get_post_type();
 
@@ -37,9 +37,25 @@ class Multilanguage {
 		$slugs["archive_{$post_type}"]['hide'] = true;
 
 		// Set the correct archive page
-		$slugs["archive_{$post_type}"]['translations'][$language->slug] = static::get_achive_slug( $language->slug );
+		$slugs["archive_{$post_type}"]['translations'][$language->slug] = static::get_archive_slug( $language->slug );
 
 		return $slugs;
+	}
+
+	/**
+	 * Get the archive page for a given language
+	 * 
+	 * @return string
+	 */
+	public static function get_translated_achive_page( $language = null ) {
+
+	    $translated_archive_page = false;
+	    
+	    if ( ! static::is_default_language( $language ) ) {
+	        $translated_archive_page = pll_get_post( Settings::get('page_for_projects'), $language );
+	    }
+
+	    return $translated_archive_page;
 	}
 
 	/**
@@ -47,21 +63,12 @@ class Multilanguage {
 	 * 
 	 * @return string
 	 */
-	public static function get_achive_slug( $language = null ) {
+	public static function get_archive_slug( $language = null ) {
 
-	    // Default slug
 	    $archive_slug = PostType::get_archive_slug();
-	    
-	    if ( $language && ! static::is_default_language( $language ) ) {
 
-	        // Get archive page
-	        $archive_page = PostType::get_page_for_projects();
-
-	        // Get translated page
-	        $archive_page = pll_get_post( $archive_page, $language );
-
-	        // Set slug
-	        $archive_slug = ($archive_page) ? get_page_uri($archive_page) : $archive_slug;
+	    if ( $translated_archive_page = static::get_translated_achive_page( $language ) ) {
+	        $archive_slug = get_page_uri($translated_archive_page);
 	    }
 
 	    return $archive_slug;
@@ -82,18 +89,6 @@ class Multilanguage {
 	}
 
 	/**
-	 * Get current language
-	 */
-	public static function get_current_language() {
-
-		if ( ! static::has_polylang() ) {
-			return false;
-		}
-		
-		return pll_current_language();
-	}
-
-	/**
 	 * Check if default language
 	 * 
 	 * If no language is give we assume it's the default language
@@ -107,7 +102,7 @@ class Multilanguage {
 		}
 
 		// The language to check
-		$language = $language ?? static::get_current_language();
+		$language = $language ?? pll_current_language();
 
 		// If we have a language, test it against the default language
 		if ($language) {

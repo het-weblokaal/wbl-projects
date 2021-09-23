@@ -12,7 +12,7 @@ namespace WBL\Projects;
 function set_archive_page_title( $title, $post_type ) {
 
 	if ( $post_type == PostType::get_post_type() ) {
-		if ( $post_id = PostType::get_page_for_projects() ) {
+		if ( $post_id = PostType::get_archive_page() ) {
 			$title = get_post_field( 'post_title', $post_id );
 			$title = apply_filters( 'the_title', $title );
 		}
@@ -27,7 +27,7 @@ function set_archive_page_title( $title, $post_type ) {
 function set_archive_page_description( $content ) {
 
 	if ( is_post_type_archive( PostType::get_post_type() ) ) {
-		if ( $post_id = PostType::get_page_for_projects() ) {
+		if ( $post_id = PostType::get_archive_page() ) {
 			$content = get_post_field( 'post_content', $post_id, 'raw' );
 		}
 	}
