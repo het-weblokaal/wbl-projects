@@ -3,7 +3,7 @@
 namespace WBL\Projects;
 
 /**
- * Class Admin
+ * Class Multilanguage
  */
 class Multilanguage {
 

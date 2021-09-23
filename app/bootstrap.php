@@ -33,10 +33,10 @@ array_map( function( $file ) {
     'class-taxonomy-category',
     'class-settings',
     'class-multilanguage',
+    'class-seo',
     'admin/class-admin',
     'setup',
     'filters',
-    // 'extensions/seo',
 ] );
 
 

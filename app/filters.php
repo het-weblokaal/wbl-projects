@@ -20,6 +20,7 @@ function set_archive_page_title( $title, $post_type ) {
 
 	return $title;
 }
+
 /**
  *
  */

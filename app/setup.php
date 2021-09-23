@@ -18,18 +18,16 @@ add_action( 'plugins_loaded', function() {
 		load_plugin_textdomain( 'wbl-projects', false, App::get_slug() . '/' . App::get_lang_dir() );
 	} );
 
-	// Setup Post Type
+	// Fire classes
 	PostType::setup();
-
-	// Setup Category Taxonomy
 	TaxCategory::setup();
-
-	// Setup Settings
 	Admin::setup();
+	Multilanguage::setup();
+	SEO::setup();
 
 	// Set archive title and description
-	add_filter( 'post_type_archive_title', 'WBL\Projects\set_archive_page_title', 10, 2 );
-	add_filter( 'get_the_archive_description', 'WBL\Projects\set_archive_page_description' );
+	add_filter( 'post_type_archive_title', __NAMESPACE__ . '\set_archive_page_title', 10, 2 );
+	add_filter( 'get_the_archive_description', __NAMESPACE__ . '\set_archive_page_description' );
 
 	/**
 	 * The filter is named rest_{post_type}_collection_params. So you need to hook a new filter for each 
