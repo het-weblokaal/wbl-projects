@@ -5,20 +5,54 @@
 
 namespace WBL\Projects;
 
+// Allow theme to change behavior
+add_action( 'after_setup_theme', function() {
+
+	// Allow block to be disabled
+	if ( apply_filters( 'wbl/projects/blocks/projects', true ) ) {
+
+		// Register dynamic blocks
+		add_action( 'init', 					   __NAMESPACE__ . '\register_projects_block' );
+
+		// Register blocks
+		add_action( 'enqueue_block_editor_assets', __NAMESPACE__ . '\register_projects_block_script' );
+	}
+
+}, 999);
+
 /**
  * Registers the Projects block.
  */
 function register_projects_block() {
 
-	// Allow block to be disabled
-	if ( apply_filters( 'wbl/projects/blocks/projects', true ) ) {
-
-		register_block_type_from_metadata( App::blocks_path( "projects" ), [
-			'render_callback' => __NAMESPACE__ . '\render_projects_block',
-		] );
-
-	}
+	register_block_type_from_metadata( App::blocks_path( "projects" ), [
+		'render_callback' => __NAMESPACE__ . '\render_projects_block',
+	] );
 }
+
+/**
+ * Add the blocks script to the editor
+ */
+function register_projects_block_script() {
+
+	// Scripts.
+	wp_enqueue_script(
+		App::handle('blocks'),
+		App::asset( 'blocks/projects.js' ),
+		[
+			'lodash',
+			'wp-blocks',
+			'wp-components',
+			'wp-data',
+			'wp-editor',
+			'wp-element',
+			'wp-i18n',
+		],
+		null,
+		true // Enqueue the script in the footer.
+	);
+}
+
 
 /**
  * Renders the Projects block.

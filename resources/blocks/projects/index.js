@@ -1,6 +1,7 @@
-/**
- * External dependancies
- */
+// WordPress dependencies
+const { registerBlockType } = wp.blocks;
+
+// External dependancies
 const { merge } = lodash;
 
 // Imports
@@ -17,5 +18,5 @@ const settings = merge(metadata, {
 	save: save
 });
 
-// Export
-export { name, settings };
+// Register
+registerBlockType( name, settings );

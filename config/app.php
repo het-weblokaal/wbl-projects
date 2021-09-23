@@ -13,5 +13,5 @@ return [
 	'assets_dir'   => 'public',
 	'src_dir'      => 'resources',
 	'template_dir' => 'app/template',
-	'blocks_dir'   => 'app/blocks',
+	'blocks_dir'   => 'resources/blocks',
 ];

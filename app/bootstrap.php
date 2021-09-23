@@ -47,8 +47,5 @@ array_map( function( $file ) {
 array_map( function( $file ) {
     require_once( App::blocks_path( "{$file}.php" ) );
 }, [
-    'index',
-
-    // Blocks
     'projects/index',
 ] );
