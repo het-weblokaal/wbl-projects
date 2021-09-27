@@ -62,7 +62,7 @@ function register_projects_block_script() {
  */
 function render_projects_block( $attributes ) {
 
-	$render = apply_filters( 'wbl/projects/block/render', false, $attributes );
+	$render = apply_filters( 'wbl/projects/block/projects/render', false, $attributes );
 
 	// If no render provided by theme, then default projects template
 	if ( ! $render ) {
