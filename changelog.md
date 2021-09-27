@@ -1,4 +1,4 @@
-
+0.3
 - Allow projects block to be disabled through filter
 - Improve support for polylang
 - Improve `archive_slug` support for polylang

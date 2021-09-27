@@ -3,7 +3,7 @@
  * Plugin Name:  WBL Projects
  * Plugin URI:   https://github.com/het-weblokaal/wbl-projects
  * Description:  Robust projects plugin by Het Weblokaal
- * Version:      0.2.1
+ * Version:      0.3
  * Author:       Author: Het Weblokaal <erik.info@hetweblokaal.nl>
  * Author URI:   https://www.hetweblokaal.nl/
  * Text Domain:  wbl-projects

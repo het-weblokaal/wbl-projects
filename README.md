@@ -5,13 +5,16 @@ WBL Projects
 
 This plugin provides several filters to manipulate its behaviour:
 
-- `add_filter( 'wbl/projects/block',                     <function>, 10, 2 );`
-- `add_filter( 'wbl/projects/post_type/archive_slug',    <function>  );`
-- `add_filter( 'wbl/projects/post_type/single_slug',     <function>  );`
-- `add_filter( 'wbl/projects/post_type/labels',          <function>  );`
-- `add_filter( 'wbl/projects/post_type/admin_columns',   <function>  );`
-- `add_filter( 'wbl/projects/post_type/feature_support', <function>  );`
-- `add_filter( 'wbl/projects/taxonomy/category/labels',  <function>  );`
+- `add_filter( 'wbl/projects/post_type/archive_slug',    <function> )`;
+- `add_filter( 'wbl/projects/post_type/single_slug',     <function> )`;
+- `add_filter( 'wbl/projects/post_type/labels',          <function> )`;
+- `add_filter( 'wbl/projects/post_type/admin_columns',   <function> )`;
+- `add_filter( 'wbl/projects/post_type/feature_support', <function> )`;
+- `add_filter( 'wbl/projects/taxonomy/category,          <function> )`;
+- `add_filter( 'wbl/projects/taxonomy/category/labels',  <function> )`;
+- `add_filter( 'wbl/projects/taxonomy/category/slug',    <function> )`;
+- `add_filter( 'wbl/projects/block/projects',            <function>, 10, 2 ) `;
+- `add_filter( 'wbl/projects/block/projects/render',     <function> )`;
 
 ## Usage of Extended CPTs library
 
