@@ -1,3 +1,8 @@
+# Changelog
+
+0.3.1
+- Fixed conflict with Slim SEO due to changed filter arguments
+
 0.3
 - Allow projects block to be disabled through filter
 - Improve support for polylang
